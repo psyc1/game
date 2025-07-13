@@ -69,7 +69,7 @@ export const PauseMenu: React.FC = () => {
           >
             <Home className="w-5 h-5" />
             <span>ABANDONAR MISIÓN</span>
-          </button>
+          </motion.button>
         </motion.div>
 
         {/* Controls reminder */}
