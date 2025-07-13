@@ -1,3 +1,26 @@
+import { getWavePattern } from '../config/wavePatterns';
+import { alienTypes } from '../config/alienTypes';
+import { Alien3D } from './Alien3D';
+import * as THREE from 'three';
+
+interface AlienType {
+  name: string;
+  hp: number;
+  speed: number;
+  points: number;
+  color: string;
+}
+
+interface WaveComposition {
+  alienType: AlienType;
+  count: number;
+}
+
+interface WavePattern {
+  description: string;
+  composition: WaveComposition[];
+}
+
 export class WaveManager {
   private scene: THREE.Scene;
   private aliens: Alien3D[] = [];
