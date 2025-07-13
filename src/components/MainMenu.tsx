@@ -16,7 +16,7 @@ export const MainMenu: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden px-4 sm:px-6 lg:px-8">
       {/* Animated Space Background */}
       <div className="absolute inset-0">
         {/* Stars */}
@@ -46,11 +46,11 @@ export const MainMenu: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center py-8">
         <animated.div style={containerSpring} className="w-full max-w-4xl">
           
           {/* Title Section */}
-          <div className="text-center mb-8 sm:mb-12">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-12">
             <motion.h1
               animate={{ 
                 textShadow: [
@@ -60,50 +60,50 @@ export const MainMenu: React.FC = () => {
                 ]
               }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="text-3xl sm:text-5xl lg:text-7xl xl:text-8xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-2 sm:mb-4 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent"
             >
               SPACE INVADERS
             </motion.h1>
             
-            <div className="text-base sm:text-lg lg:text-2xl xl:text-3xl font-bold text-white mb-4 tracking-wider">
+            <div className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-2 sm:mb-4 tracking-wider">
               <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
                 GALACTIC WARFARE
               </span>
             </div>
             
-            <p className="text-sm sm:text-base lg:text-lg text-gray-300 mb-6 sm:mb-8 font-light max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-300 mb-4 sm:mb-6 lg:mb-8 font-light max-w-2xl mx-auto">
               Defiende la galaxia a través de 20 niveles épicos. Evoluciona tu armamento y enfrenta jefes poderosos.
             </p>
 
             {/* Game Features */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8 max-w-4xl mx-auto">
-              <div className="bg-slate-900/60 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-cyan-400/30 shadow-2xl">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8 max-w-4xl mx-auto">
+              <div className="bg-slate-900/60 backdrop-blur-xl rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 border border-cyan-400/30 shadow-2xl">
                 <Star className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400 mx-auto mb-2" />
-                <h3 className="text-white font-bold mb-2 text-sm sm:text-base">20 Niveles</h3>
+                <h3 className="text-white font-bold mb-1 sm:mb-2 text-xs sm:text-sm lg:text-base">20 Niveles</h3>
                 <p className="text-gray-400 text-xs sm:text-sm">Con jefes finales épicos</p>
               </div>
-              <div className="bg-slate-900/60 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-purple-400/30 shadow-2xl">
+              <div className="bg-slate-900/60 backdrop-blur-xl rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 border border-purple-400/30 shadow-2xl">
                 <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-purple-400 mx-auto mb-2" />
-                <h3 className="text-white font-bold mb-2 text-sm sm:text-base">10 Armas</h3>
+                <h3 className="text-white font-bold mb-1 sm:mb-2 text-xs sm:text-sm lg:text-base">10 Armas</h3>
                 <p className="text-gray-400 text-xs sm:text-sm">Evolución progresiva</p>
               </div>
-              <div className="bg-slate-900/60 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-green-400/30 shadow-2xl">
+              <div className="bg-slate-900/60 backdrop-blur-xl rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 border border-green-400/30 shadow-2xl">
                 <Trophy className="w-6 h-6 sm:w-8 sm:h-8 text-green-400 mx-auto mb-2" />
-                <h3 className="text-white font-bold mb-2 text-sm sm:text-base">Sistema de Estrellas</h3>
+                <h3 className="text-white font-bold mb-1 sm:mb-2 text-xs sm:text-sm lg:text-base">Sistema de Estrellas</h3>
                 <p className="text-gray-400 text-xs sm:text-sm">Perfecciona tu técnica</p>
               </div>
             </div>
           </div>
 
           {/* Menu Buttons */}
-          <div className="space-y-4 w-full max-w-md mx-auto">
+          <div className="space-y-3 sm:space-y-4 w-full max-w-sm sm:max-w-md mx-auto">
             <motion.button
               whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(34, 197, 94, 0.5)' }}
               whileTap={{ scale: 0.98 }}
               onClick={startGame}
-              className="w-full flex items-center justify-center space-x-3 px-6 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 rounded-2xl text-lg font-bold text-white transition-all duration-300 shadow-2xl border border-emerald-400/50 backdrop-blur-xl"
+              className="w-full flex items-center justify-center space-x-2 sm:space-x-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 rounded-xl sm:rounded-2xl text-base sm:text-lg font-bold text-white transition-all duration-300 shadow-2xl border border-emerald-400/50 backdrop-blur-xl"
             >
-              <Play className="w-5 h-5" />
+              <Play className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>INICIAR MISIÓN</span>
             </motion.button>
 
@@ -111,9 +111,9 @@ export const MainMenu: React.FC = () => {
               whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(59, 130, 246, 0.5)' }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setShowInstructions(true)}
-              className="w-full flex items-center justify-center space-x-3 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-2xl text-lg font-bold text-white transition-all duration-300 shadow-2xl border border-blue-400/50 backdrop-blur-xl"
+              className="w-full flex items-center justify-center space-x-2 sm:space-x-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl sm:rounded-2xl text-base sm:text-lg font-bold text-white transition-all duration-300 shadow-2xl border border-blue-400/50 backdrop-blur-xl"
             >
-              <Info className="w-5 h-5" />
+              <Info className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>INSTRUCCIONES</span>
             </motion.button>
 
@@ -121,9 +121,9 @@ export const MainMenu: React.FC = () => {
               whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(168, 85, 247, 0.5)' }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setShowSettings(true)}
-              className="w-full flex items-center justify-center space-x-3 px-6 py-4 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 rounded-2xl text-lg font-bold text-white transition-all duration-300 shadow-2xl border border-purple-400/50 backdrop-blur-xl"
+              className="w-full flex items-center justify-center space-x-2 sm:space-x-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 rounded-xl sm:rounded-2xl text-base sm:text-lg font-bold text-white transition-all duration-300 shadow-2xl border border-purple-400/50 backdrop-blur-xl"
             >
-              <Settings className="w-5 h-5" />
+              <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>CONFIGURACIÓN</span>
             </motion.button>
           </div>
@@ -133,12 +133,12 @@ export const MainMenu: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
-            className="mt-8 p-4 sm:p-6 bg-slate-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/30 max-w-md mx-auto shadow-2xl"
+            className="mt-6 sm:mt-8 p-3 sm:p-4 lg:p-6 bg-slate-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-cyan-500/30 max-w-sm sm:max-w-md mx-auto shadow-2xl"
           >
-            <div className="flex items-center justify-center space-x-3">
-              <Trophy className="w-5 h-5 text-yellow-400" />
-              <span className="text-cyan-400 font-bold text-sm sm:text-base">RÉCORD GALÁCTICO:</span>
-              <span className="text-white font-bold text-lg sm:text-xl">{highScore.toLocaleString()}</span>
+            <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+              <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" />
+              <span className="text-cyan-400 font-bold text-xs sm:text-sm lg:text-base">RÉCORD GALÁCTICO:</span>
+              <span className="text-white font-bold text-sm sm:text-lg lg:text-xl">{highScore.toLocaleString()}</span>
             </div>
           </motion.div>
         </animated.div>
