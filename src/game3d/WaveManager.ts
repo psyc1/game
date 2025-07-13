@@ -12,14 +12,17 @@ export class WaveManager {
   private level = 1;
   private aliensDestroyed = 0;
   private totalAliensInWave = 0;
+  private waveStarted = false;
 
   constructor(scene: THREE.Scene) {
     this.scene = scene;
   }
 
   public startWave(level: number) {
+    console.log(`Starting wave for level ${level}`);
     this.level = level;
     this.aliensDestroyed = 0;
+    this.waveStarted = true;
     
     // Limpiar aliens existentes
     this.aliens.forEach(alien => alien.dispose());
@@ -32,36 +35,41 @@ export class WaveManager {
     
     // Calculate required aliens for this level: 20 + (level-1) * 5
     this.totalAliensInWave = 20 + (level - 1) * 5;
+    console.log(`Total aliens for level ${level}: ${this.totalAliensInWave}`);
   }
 
   private generateSpawnQueue() {
     if (!this.currentWave) return;
     
     this.spawnQueue = [];
-    this.totalAliensInWave = 0;
+    let actualTotal = 0;
     
     // Contar total de aliens
     this.currentWave.composition.forEach(comp => {
-      this.totalAliensInWave += comp.count;
+      actualTotal += comp.count;
     });
+    
+    console.log(`Wave composition total: ${actualTotal}, Required: ${this.totalAliensInWave}`);
     
     // Generar posiciones según la formación
     const positions = this.generateFormationPositions();
     let positionIndex = 0;
     
-    // Crear cola de spawn
+    // Crear cola de spawn con delays más rápidos
     this.currentWave.composition.forEach(comp => {
       for (let i = 0; i < comp.count; i++) {
         if (positionIndex < positions.length) {
           this.spawnQueue.push({
             alienType: comp.alienType,
             position: positions[positionIndex],
-            delay: positionIndex * 0.3 // 0.3 segundos entre cada spawn
+            delay: positionIndex * 0.1 // Reducido de 0.3 a 0.1 segundos
           });
           positionIndex++;
         }
       }
     });
+    
+    console.log(`Spawn queue created with ${this.spawnQueue.length} aliens`);
   }
 
   private generateFormationPositions(): THREE.Vector3[] {
@@ -135,6 +143,8 @@ export class WaveManager {
   }
 
   public update(deltaTime: number) {
+    if (!this.waveStarted) return;
+    
     // Actualizar aliens existentes
     for (let i = this.aliens.length - 1; i >= 0; i--) {
       const alien = this.aliens[i];
@@ -146,7 +156,7 @@ export class WaveManager {
       }
     }
     
-    // Procesar cola de spawn
+    // Procesar cola de spawn más rápido
     if (this.spawnQueue.length > 0) {
       this.spawnTimer += deltaTime;
       
@@ -167,6 +177,7 @@ export class WaveManager {
   private spawnAlien(alienType: AlienType, position: THREE.Vector3) {
     const alien = new Alien3D(this.scene, position, alienType);
     this.aliens.push(alien);
+    console.log(`Spawned alien, total active: ${this.aliens.length}`);
   }
 
   public removeAlien(alien: Alien3D) {
@@ -175,6 +186,7 @@ export class WaveManager {
       this.aliens.splice(index, 1);
       alien.dispose();
       this.aliensDestroyed++;
+      console.log(`Alien removed, destroyed: ${this.aliensDestroyed}, remaining: ${this.aliens.length}`);
     }
   }
 
@@ -194,7 +206,13 @@ export class WaveManager {
     // Wave is complete when all aliens are spawned AND destroyed
     const allAliensSpawned = this.spawnQueue.length === 0;
     const noAliensRemaining = this.aliens.length === 0;
-    return allAliensSpawned && noAliensRemaining;
+    const waveComplete = allAliensSpawned && noAliensRemaining && this.waveStarted;
+    
+    if (waveComplete) {
+      console.log('Wave completed!');
+    }
+    
+    return waveComplete;
   }
 
   public getProgress(): { destroyed: number; total: number; remaining: number } {
@@ -207,5 +225,12 @@ export class WaveManager {
 
   public getCurrentWaveInfo(): string {
     return this.currentWave?.description || `Oleada ${this.level}`;
+  }
+
+  public stopWave() {
+    this.waveStarted = false;
+    this.aliens.forEach(alien => alien.dispose());
+    this.aliens = [];
+    this.spawnQueue = [];
   }
 }

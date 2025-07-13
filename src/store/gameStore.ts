@@ -32,8 +32,9 @@ export interface GameState {
   enemigosRequeridos: number;
   enemigosEscapados: number;
   
-  // Boss system
+  // Boss system - CORREGIDO
   showBoss: boolean;
+  bossActive: boolean;
   bossHP: number;
   bossMaxHP: number;
   bossDefeated: boolean;
@@ -68,9 +69,10 @@ export interface GameActions {
   enemyDestroyed: () => void;
   enemyEscaped: () => void;
   
-  // Boss actions
+  // Boss actions - CORREGIDOS
   spawnBoss: (hp: number) => void;
   damageBoss: (damage: number) => void;
+  clearBoss: () => void;
   
   // Equipment actions
   equipWeapon: (weaponId: string) => void;
@@ -117,6 +119,7 @@ const initialState: GameState = {
   enemigosRequeridos: 20,
   enemigosEscapados: 0,
   showBoss: false,
+  bossActive: false,
   bossHP: 0,
   bossMaxHP: 0,
   bossDefeated: false,
@@ -153,7 +156,9 @@ export const useGameStore = create<GameState & GameActions>()(
         velocidadDisparo: 1,
         showUpgradeSelection: false,
         isTransitioning: false,
+        // BOSS STATE RESET
         showBoss: false,
+        bossActive: false,
         bossHP: 0,
         bossMaxHP: 0,
         bossDefeated: false,
@@ -196,7 +201,9 @@ export const useGameStore = create<GameState & GameActions>()(
         gameState: 'levelComplete',
         bossDefeated: true,
         showBoss: false,
-        bossHP: 0
+        bossActive: false,
+        bossHP: 0,
+        bossMaxHP: 0
       });
     },
     
@@ -212,7 +219,9 @@ export const useGameStore = create<GameState & GameActions>()(
           enemigosDestruidos: 0,
           enemigosRequeridos: newRequirement,
           enemigosEscapados: 0,
+          // CLEAR BOSS STATE
           showBoss: false,
+          bossActive: false,
           bossHP: 0,
           bossMaxHP: 0,
           bossDefeated: false,
@@ -223,9 +232,12 @@ export const useGameStore = create<GameState & GameActions>()(
       }
     },
     
+    // BOSS ACTIONS CORREGIDAS
     spawnBoss: (hp: number) => {
+      console.log('Spawning boss with HP:', hp);
       set({
         showBoss: true,
+        bossActive: true,
         bossHP: hp,
         bossMaxHP: hp,
         bossDefeated: false
@@ -233,16 +245,33 @@ export const useGameStore = create<GameState & GameActions>()(
     },
     
     damageBoss: (damage: number) => {
-      const { bossHP } = get();
+      const { bossHP, bossActive } = get();
+      if (!bossActive) return;
+      
       const newHP = Math.max(0, bossHP - damage);
       set({ bossHP: newHP });
       
       if (newHP <= 0) {
+        console.log('Boss defeated!');
         get().addScore(1000);
+        set({ 
+          bossDefeated: true,
+          bossActive: false 
+        });
         setTimeout(() => {
           get().completeLevel();
-        }, 500);
+        }, 1000);
       }
+    },
+    
+    clearBoss: () => {
+      set({
+        showBoss: false,
+        bossActive: false,
+        bossHP: 0,
+        bossMaxHP: 0,
+        bossDefeated: false
+      });
     },
     
     takeDamage: (damage: number) => {
@@ -292,13 +321,16 @@ export const useGameStore = create<GameState & GameActions>()(
     },
     
     enemyDestroyed: () => {
-      const { enemigosDestruidos, enemigosRequeridos, nivelActual } = get();
+      const { enemigosDestruidos, enemigosRequeridos, nivelActual, bossActive } = get();
       const newDestruidos = enemigosDestruidos + 1;
       set({ enemigosDestruidos: newDestruidos });
       
-      // Check if all aliens defeated, spawn boss
-      if (newDestruidos >= enemigosRequeridos) {
+      console.log(`Enemies destroyed: ${newDestruidos}/${enemigosRequeridos}, Boss active: ${bossActive}`);
+      
+      // Check if all aliens defeated and no boss is active, spawn boss
+      if (newDestruidos >= enemigosRequeridos && !bossActive) {
         const bossHP = 50 + (nivelActual * 25);
+        console.log('All enemies defeated, spawning boss');
         get().spawnBoss(bossHP);
       }
     },
@@ -385,7 +417,7 @@ export const useGameStore = create<GameState & GameActions>()(
       const newScore = {
         name: playerName.trim(),
         score: puntuacion,
-        level: nivelActual,
+        levels: nivelActual,
         date: new Date().toISOString()
       };
       

@@ -27,6 +27,7 @@ export class Game3D {
   
   private keys: { [key: string]: boolean } = {};
   private shootCooldown = 0;
+  private bossSpawned = false;
 
   constructor(canvas: HTMLCanvasElement) {
     // Initialize Three.js
@@ -95,7 +96,13 @@ export class Game3D {
   }
 
   public startLevel(level: number) {
+    console.log(`Game3D: Starting level ${level}`);
+    this.bossSpawned = false;
     this.waveManager.startWave(level);
+    
+    // Clear boss state
+    const gameStore = useGameStore.getState();
+    gameStore.clearBoss();
   }
 
   public start() {
@@ -140,20 +147,19 @@ export class Game3D {
     
     this.checkCollisions();
     
-    // Check wave completion
-    if (this.waveManager.isWaveComplete()) {
-      // All aliens defeated, spawn boss
-      if (!gameStore.showBoss && gameStore.bossHP === 0) {
-        const bossHP = 50 + (gameStore.nivelActual * 25);
-        gameStore.spawnBoss(bossHP);
-        this.audioManager.playBossSpawn();
-      }
+    // Check wave completion and boss spawning
+    if (this.waveManager.isWaveComplete() && !this.bossSpawned && !gameStore.bossActive) {
+      console.log('Wave complete, spawning boss');
+      const bossHP = 50 + (gameStore.nivelActual * 25);
+      gameStore.spawnBoss(bossHP);
+      this.audioManager.playBossSpawn();
+      this.bossSpawned = true;
     }
   }
 
   private handleInput(deltaTime: number) {
     const gameStore = useGameStore.getState();
-    const moveSpeed = 0.12; // Improved movement speed
+    const moveSpeed = 0.12;
     
     // Movement
     if (this.keys['ArrowLeft'] || this.keys['KeyA']) {
@@ -171,27 +177,13 @@ export class Game3D {
     
     // Shooting
     if (this.keys['Space'] && this.shootCooldown <= 0) {
-      const weaponConfig = this.getWeaponConfig(gameStore.tipoDisparo);
-      this.weaponSystem.fire(this.player.position, gameStore.tipoDisparo);
-      this.audioManager.playShoot();
-      this.shootCooldown = weaponConfig.fireRate;
+      this.weaponSystem.fire(this.player.position, gameStore.nivelArma, this.audioManager);
+      this.shootCooldown = 0.15; // Fixed fire rate
     }
     
     if (this.shootCooldown > 0) {
       this.shootCooldown -= deltaTime;
     }
-  }
-
-  private getWeaponConfig(weaponType: string) {
-    const configs = {
-      single: { fireRate: 0.2 },
-      double: { fireRate: 0.25 },
-      triple: { fireRate: 0.3 },
-      spread: { fireRate: 0.4 },
-      laser: { fireRate: 0.15 },
-      missile: { fireRate: 0.8 }
-    };
-    return configs[weaponType as keyof typeof configs] || configs.single;
   }
 
   private checkCollisions() {
@@ -226,6 +218,18 @@ export class Game3D {
             this.particleSystem.createExplosion(alien.position, '#ffaa00');
           }
           break;
+        }
+      }
+      
+      // Boss collision
+      if (gameStore.bossActive && bullet.type !== 'laser') {
+        // Simple boss collision (center of screen, large hitbox)
+        const bossPosition = new THREE.Vector3(0, 8, 0);
+        if (this.weaponSystem.checkCollision(i, bossPosition, 2.0)) {
+          gameStore.damageBoss(bullet.damage);
+          this.weaponSystem.removeBullet(i);
+          this.audioManager.playBossHit();
+          this.particleSystem.createExplosion(bossPosition, '#ff4444');
         }
       }
     }
@@ -267,35 +271,6 @@ export class Game3D {
     }
   }
 
-  private showRandomUpgrades() {
-    const gameStore = useGameStore.getState();
-    const availableUpgrades = [
-      { 
-        id: 'upgradeWeapon', 
-        nombre: 'Evolución de Arma', 
-        descripcion: 'Evoluciona tu arma al siguiente nivel', 
-        tipo: 'weapon', 
-        color: '#00ff88' 
-      },
-      { 
-        id: 'health', 
-        nombre: 'Nanobots Médicos', 
-        descripcion: 'Restaura 25 puntos de vida', 
-        tipo: 'stat', 
-        color: '#ff6b6b' 
-      },
-      { 
-        id: 'shield', 
-        nombre: 'Recarga de Escudo', 
-        descripcion: 'Restaura 50 puntos de escudo', 
-        tipo: 'stat', 
-        color: '#4ecdc4' 
-      }
-    ];
-    
-    gameStore.showUpgrades(availableUpgrades);
-  }
-
   private render() {
     this.renderer.render(this.scene, this.camera);
   }
@@ -303,6 +278,7 @@ export class Game3D {
   public dispose() {
     this.stop();
     this.audioManager.dispose();
+    this.waveManager.stopWave();
     this.scene.clear();
     this.renderer.dispose();
   }
