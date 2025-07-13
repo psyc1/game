@@ -56,11 +56,10 @@ export class WaveManager {
       this.boss = null;
     }
     
-    // Obtener patrón de oleada
-    this.currentWave = getWavePattern(level);
-    this.totalAliensInWave = 20 + (level - 1) * 5;
+    // SIEMPRE 20 aliens por nivel
+    this.totalAliensInWave = 20;
     
-    console.log(`📊 Total aliens for level ${level}: ${this.totalAliensInWave}`);
+    console.log(`📊 FIXED: 20 aliens for level ${level}`);
     
     // Generar cola de spawn inmediatamente
     this.generateSpawnQueue();

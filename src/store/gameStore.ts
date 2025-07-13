@@ -343,15 +343,15 @@ export const useGameStore = create<GameState & GameActions>()(
     },
     
     enemyDestroyed: () => {
-      const { enemigosDestruidos, enemigosRequeridos, nivelActual, bossActive } = get();
-      const newDestruidos = enemigosDestruidos + 1;
+      const { enemigosDestruidos, bossActive } = get();
+      const newDestruidos = Math.min(enemigosDestruidos + 1, 20); // NUNCA más de 20
       set({ enemigosDestruidos: newDestruidos });
       
-      console.log(`Enemies destroyed: ${newDestruidos}/${enemigosRequeridos}, Boss active: ${bossActive}`);
+      console.log(`Enemies destroyed: ${newDestruidos}/20, Boss active: ${bossActive}`);
       
       // Check if all aliens defeated and no boss is active, spawn boss
-      if (newDestruidos >= enemigosRequeridos && !bossActive) {
-        const bossHP = 50 + (nivelActual * 25);
+      if (newDestruidos >= 20 && !bossActive) {
+        const bossHP = 50 + (get().nivelActual * 25);
         console.log('All enemies defeated, spawning boss');
         get().spawnBoss(bossHP);
       }

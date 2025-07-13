@@ -22,12 +22,15 @@ export class Alien3D {
     this.createAlienMesh();
     this.mesh.position.copy(position);
     
+    // FORZAR POSICIÓN Z=0 PARA COLISIONES 2D
+    this.mesh.position.z = 0;
+    
     scene.add(this.mesh);
   }
 
   private createAlienMesh() {
     const color = new THREE.Color(this.alienType.color);
-    const size = this.isBoss ? this.alienType.size * 3 : this.alienType.size;
+    const size = this.isBoss ? this.alienType.size * 1.5 : this.alienType.size; // Jefe más pequeño
     
     // Crear cuerpo principal del alien
     this.createAlienBody(color, size);

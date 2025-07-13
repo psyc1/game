@@ -208,12 +208,11 @@ export class Game3D {
       
       // Aliens collision - 2D distance check
       for (const alien of aliens) {
-        const distance2D = Math.sqrt(
-          Math.pow(bullet.mesh.position.x - alien.position.x, 2) +
-          Math.pow(bullet.mesh.position.y - alien.position.y, 2)
-        );
+        const dx = bullet.mesh.position.x - alien.position.x;
+        const dy = bullet.mesh.position.y - alien.position.y;
+        const distance2D = Math.sqrt(dx * dx + dy * dy);
         
-        if (distance2D < 0.8) { // 2D collision radius
+        if (distance2D < 0.6) { // Radio más pequeño para colisiones precisas
           const destroyed = alien.takeDamage(bullet.damage);
           this.weaponSystem.removeBullet(i);
           
@@ -238,12 +237,11 @@ export class Game3D {
       
       // Boss collision - 2D distance check with larger radius
       if (boss) {
-        const distance2D = Math.sqrt(
-          Math.pow(bullet.mesh.position.x - boss.position.x, 2) +
-          Math.pow(bullet.mesh.position.y - boss.position.y, 2)
-        );
+        const dx = bullet.mesh.position.x - boss.position.x;
+        const dy = bullet.mesh.position.y - boss.position.y;
+        const distance2D = Math.sqrt(dx * dx + dy * dy);
         
-        if (distance2D < 1.5) { // Larger 2D collision radius for boss
+        if (distance2D < 1.0) { // Radio más pequeño para jefe
           const destroyed = boss.takeDamage(bullet.damage);
           this.weaponSystem.removeBullet(i);
           
@@ -272,12 +270,11 @@ export class Game3D {
     
     // Aliens vs player (collision damage) - 2D collision
     for (const alien of aliens) {
-      const distance2D = Math.sqrt(
-        Math.pow(alien.position.x - this.player.position.x, 2) +
-        Math.pow(alien.position.y - this.player.position.y, 2)
-      );
+      const dx = alien.position.x - this.player.position.x;
+      const dy = alien.position.y - this.player.position.y;
+      const distance2D = Math.sqrt(dx * dx + dy * dy);
       
-      if (distance2D < 0.8) {
+      if (distance2D < 0.6) {
         this.waveManager.removeAlien(alien);
         gameStore.takeDamage(alien.getDamage());
         this.audioManager.playHit();
@@ -288,12 +285,11 @@ export class Game3D {
     
     // Boss vs player collision - 2D collision
     if (boss) {
-      const distance2D = Math.sqrt(
-        Math.pow(boss.position.x - this.player.position.x, 2) +
-        Math.pow(boss.position.y - this.player.position.y, 2)
-      );
+      const dx = boss.position.x - this.player.position.x;
+      const dy = boss.position.y - this.player.position.y;
+      const distance2D = Math.sqrt(dx * dx + dy * dy);
       
-      if (distance2D < 1.5) {
+      if (distance2D < 1.0) {
         gameStore.takeDamage(boss.getDamage());
         this.audioManager.playHit();
         this.particleSystem.createExplosion(this.player.position, '#ff4444');
