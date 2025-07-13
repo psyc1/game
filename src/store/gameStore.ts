@@ -89,13 +89,14 @@ export interface GameActions {
   
   // Leaderboard actions
   showLeaderboard: () => void;
+  saveScore: (playerName: string) => void;
   
   // Reset
   resetGame: () => void;
 }
 
 const initialState: GameState = {
-  nivelActual: 1, // Always start at level 1
+  nivelActual: 1,
   puntuacion: 0,
   vidaJugador: 100,
   vidaMaxima: 100,
@@ -113,7 +114,7 @@ const initialState: GameState = {
   showUpgradeSelection: false,
   availableUpgrades: [],
   enemigosDestruidos: 0,
-  enemigosRequeridos: 20, // Level 1: 20 aliens
+  enemigosRequeridos: 20,
   enemigosEscapados: 0,
   showBoss: false,
   bossHP: 0,
@@ -134,14 +135,14 @@ export const useGameStore = create<GameState & GameActions>()(
     startGame: () => {
       set({ 
         gameState: 'playing', 
-        nivelActual: 1, // Ensure we start at level 1
+        nivelActual: 1,
         puntuacion: 0, 
         vidaJugador: 100,
         vidaMaxima: 100,
         escudoActual: 100,
         escudoMaximo: 100,
         enemigosDestruidos: 0,
-        enemigosRequeridos: 20, // Level 1: 20 aliens
+        enemigosRequeridos: 20,
         enemigosEscapados: 0,
         armasEquipadas: ['laserSimple'],
         tipoDisparo: 'single',
@@ -155,6 +156,7 @@ export const useGameStore = create<GameState & GameActions>()(
         showBoss: false,
         bossHP: 0,
         bossMaxHP: 0,
+        bossDefeated: false,
         currentLevelStars: 0,
         levelStars: new Array(20).fill(0)
       });
@@ -192,7 +194,9 @@ export const useGameStore = create<GameState & GameActions>()(
         currentLevelStars: stars,
         levelStars: newLevelStars,
         gameState: 'levelComplete',
-        bossDefeated: true
+        bossDefeated: true,
+        showBoss: false,
+        bossHP: 0
       });
     },
     
@@ -202,7 +206,7 @@ export const useGameStore = create<GameState & GameActions>()(
         set({ gameState: 'victory' });
       } else {
         const newLevel = nivelActual + 1;
-        const newRequirement = 20 + (newLevel - 1) * 5; // 20, 25, 30, 35, etc.
+        const newRequirement = 20 + (newLevel - 1) * 5;
         set({ 
           nivelActual: newLevel,
           enemigosDestruidos: 0,
@@ -234,8 +238,7 @@ export const useGameStore = create<GameState & GameActions>()(
       set({ bossHP: newHP });
       
       if (newHP <= 0) {
-        // Boss defeated, complete level
-        get().addScore(1000); // Bonus for boss
+        get().addScore(1000);
         setTimeout(() => {
           get().completeLevel();
         }, 500);
@@ -245,7 +248,6 @@ export const useGameStore = create<GameState & GameActions>()(
     takeDamage: (damage: number) => {
       const { vidaJugador, escudoActual } = get();
       
-      // Shield absorbs damage first
       if (escudoActual > 0) {
         const newEscudo = Math.max(0, escudoActual - damage);
         const remainingDamage = damage - escudoActual;
@@ -280,7 +282,7 @@ export const useGameStore = create<GameState & GameActions>()(
     
     upgradeWeapon: () => {
       const { nivelArma } = get();
-      const newLevel = Math.min(nivelArma + 1, 9); // Max level 9 (10 weapons total)
+      const newLevel = Math.min(nivelArma + 1, 9);
       set({ nivelArma: newLevel });
     },
     
@@ -290,26 +292,21 @@ export const useGameStore = create<GameState & GameActions>()(
     },
     
     enemyDestroyed: () => {
-      const { enemigosDestruidos, enemigosRequeridos, nivelArma } = get();
+      const { enemigosDestruidos, enemigosRequeridos, nivelActual } = get();
       const newDestruidos = enemigosDestruidos + 1;
       set({ enemigosDestruidos: newDestruidos });
       
       // Check if all aliens defeated, spawn boss
       if (newDestruidos >= enemigosRequeridos) {
-        const bossHP = 50 + (get().nivelActual * 25); // Boss HP scales with level
+        const bossHP = 50 + (nivelActual * 25);
         get().spawnBoss(bossHP);
-      }
-      
-      // Chance to upgrade weapon (15% chance)
-      if (Math.random() < 0.15 && nivelArma < 9) {
-        // Spawn weapon power-up
       }
     },
     
     enemyEscaped: () => {
       const { enemigosEscapados } = get();
       set({ enemigosEscapados: enemigosEscapados + 1 });
-      get().takeDamage(5); // Lose 5 HP when alien escapes
+      get().takeDamage(5);
     },
     
     equipWeapon: (weaponId: string) => {
@@ -374,6 +371,32 @@ export const useGameStore = create<GameState & GameActions>()(
     
     showLeaderboard: () => {
       set({ gameState: 'leaderboard' });
+    },
+    
+    saveScore: (playerName: string) => {
+      const { puntuacion, nivelActual } = get();
+      
+      // Get existing leaderboard
+      const existingScores = JSON.parse(
+        localStorage.getItem('spaceInvaders_leaderboard') || '[]'
+      );
+      
+      // Add new score
+      const newScore = {
+        name: playerName.trim(),
+        score: puntuacion,
+        level: nivelActual,
+        date: new Date().toISOString()
+      };
+      
+      existingScores.push(newScore);
+      
+      // Sort by score (highest first) and keep top 10
+      existingScores.sort((a: any, b: any) => b.score - a.score);
+      const topScores = existingScores.slice(0, 10);
+      
+      // Save to localStorage
+      localStorage.setItem('spaceInvaders_leaderboard', JSON.stringify(topScores));
     },
     
     resetGame: () => set({ ...initialState, highScore: get().highScore })

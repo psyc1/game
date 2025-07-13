@@ -191,7 +191,10 @@ export class WaveManager {
   }
 
   public isWaveComplete(): boolean {
-    return this.spawnQueue.length === 0 && this.aliens.length === 0;
+    // Wave is complete when all aliens are spawned AND destroyed
+    const allAliensSpawned = this.spawnQueue.length === 0;
+    const noAliensRemaining = this.aliens.length === 0;
+    return allAliensSpawned && noAliensRemaining;
   }
 
   public getProgress(): { destroyed: number; total: number; remaining: number } {

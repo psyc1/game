@@ -4,15 +4,8 @@ import { animated, useSpring } from '@react-spring/web';
 import { motion } from 'framer-motion';
 import { Trophy, Star, Home, Users, Save } from 'lucide-react';
 
-interface LeaderboardEntry {
-  name: string;
-  score: number;
-  date: string;
-  levels: number;
-}
-
 export const VictoryScreen: React.FC = () => {
-  const { puntuacion, resetGame, showLeaderboard } = useGameStore();
+  const { puntuacion, resetGame, showLeaderboard, saveScore } = useGameStore();
   const [playerName, setPlayerName] = useState('');
   const [nameSubmitted, setNameSubmitted] = useState(false);
 
@@ -24,34 +17,13 @@ export const VictoryScreen: React.FC = () => {
 
   const handleSubmitScore = () => {
     if (playerName.trim()) {
-      // Get existing leaderboard
-      const existingScores: LeaderboardEntry[] = JSON.parse(
-        localStorage.getItem('spaceInvaders_leaderboard') || '[]'
-      );
-      
-      // Add new score
-      const newScore: LeaderboardEntry = {
-        name: playerName.trim(),
-        score: puntuacion,
-        date: new Date().toISOString(),
-        levels: 20
-      };
-      
-      existingScores.push(newScore);
-      
-      // Sort by score (highest first) and keep top 10
-      existingScores.sort((a, b) => b.score - a.score);
-      const topScores = existingScores.slice(0, 10);
-      
-      // Save to localStorage
-      localStorage.setItem('spaceInvaders_leaderboard', JSON.stringify(topScores));
-      
+      saveScore(playerName);
       setNameSubmitted(true);
     }
   };
 
   return (
-    <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/90 via-purple-900/90 to-blue-900/90 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-gradient-to-br from-yellow-900/90 via-purple-900/90 to-blue-900/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <animated.div style={containerSpring} className="text-center max-w-2xl mx-auto">
         {/* Victory Title */}
         <motion.div

@@ -69,8 +69,16 @@ export class Game3D {
     document.addEventListener('keydown', (event) => {
       this.keys[event.code] = true;
       
-      if (event.code === 'Space') {
+      if (event.code === 'Space' || event.code === 'KeyP' || event.code === 'Escape') {
         event.preventDefault();
+      }
+      
+      // Handle pause
+      if ((event.code === 'KeyP' || event.code === 'Escape') && this.isRunning) {
+        const gameStore = useGameStore.getState();
+        if (gameStore.gameState === 'playing') {
+          gameStore.pauseGame();
+        }
       }
     });
     
@@ -135,21 +143,17 @@ export class Game3D {
     // Check wave completion
     if (this.waveManager.isWaveComplete()) {
       // All aliens defeated, spawn boss
-      if (!gameStore.showBoss && !gameStore.bossDefeated) {
+      if (!gameStore.showBoss && gameStore.bossHP === 0) {
         const bossHP = 50 + (gameStore.nivelActual * 25);
         gameStore.spawnBoss(bossHP);
         this.audioManager.playBossSpawn();
-      } else if (gameStore.showBoss && gameStore.bossHP <= 0 && !gameStore.bossDefeated) {
-        // Boss defeated, level completed
-        this.audioManager.playLevelComplete();
-        gameStore.damageBoss(gameStore.bossHP); // This will trigger completeLevel
       }
     }
   }
 
   private handleInput(deltaTime: number) {
     const gameStore = useGameStore.getState();
-    const moveSpeed = 0.08; // Velocidad de movimiento más controlada
+    const moveSpeed = 0.12; // Improved movement speed
     
     // Movement
     if (this.keys['ArrowLeft'] || this.keys['KeyA']) {

@@ -31,7 +31,7 @@ export const LevelComplete: React.FC = () => {
   };
 
   return (
-    <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-purple-900/95 to-blue-900/95 backdrop-blur-md flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-gradient-to-br from-slate-900/95 via-purple-900/95 to-blue-900/95 backdrop-blur-md flex items-center justify-center p-4 z-50">
       <animated.div style={containerSpring} className="text-center max-w-2xl mx-auto">
         {/* Level Complete Title */}
         <motion.div
