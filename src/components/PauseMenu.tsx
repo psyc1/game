@@ -69,7 +69,7 @@ export const PauseMenu: React.FC = () => {
           >
             <Home className="w-5 h-5" />
             <span>ABANDONAR MISIÓN</span>
-          </motion.button>
+          </button>
         </motion.div>
 
         {/* Controls reminder */}
@@ -77,7 +77,7 @@ export const PauseMenu: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-8 p-4 bg-black/30 rounded-lg border border-gray-700"
+          className="mt-8 p-4 bg-slate-900/60 backdrop-blur-xl rounded-lg border border-cyan-400/30"
         >
           <h3 className="text-white font-semibold mb-2">Controles</h3>
           <div className="text-sm text-gray-400 space-y-1">

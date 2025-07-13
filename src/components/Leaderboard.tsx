@@ -159,7 +159,7 @@ export const Leaderboard: React.FC = () => {
               resetGame();
               useGameStore.getState().startGame();
             }}
-            className="flex items-center justify-center space-x-3 px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl text-lg md:text-xl font-bold text-white transition-all duration-300"
+            className="flex items-center justify-center space-x-3 px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl text-lg md:text-xl font-bold text-white transition-all duration-300 shadow-2xl border border-green-400/50 backdrop-blur-xl"
           >
             <RotateCcw className="w-5 h-5 md:w-6 md:h-6" />
             <span>JUGAR DE NUEVO</span>
@@ -169,7 +169,7 @@ export const Leaderboard: React.FC = () => {
             whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(59, 130, 246, 0.5)' }}
             whileTap={{ scale: 0.95 }}
             onClick={resetGame}
-            className="flex items-center justify-center space-x-3 px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-xl text-lg md:text-xl font-bold text-white transition-all duration-300"
+            className="flex items-center justify-center space-x-3 px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-xl text-lg md:text-xl font-bold text-white transition-all duration-300 shadow-2xl border border-blue-400/50 backdrop-blur-xl"
           >
             <Home className="w-5 h-5 md:w-6 md:h-6" />
             <span>MENÚ PRINCIPAL</span>

@@ -49,7 +49,7 @@ export const GameOverScreen: React.FC = () => {
           transition={{ delay: 0.4 }}
           className="space-y-6 mb-8"
         >
-          <div className="bg-black/50 rounded-xl p-6 border border-gray-700">
+          <div className="bg-slate-900/60 backdrop-blur-xl rounded-xl p-6 border border-cyan-400/30">
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center">
                 <div className="text-3xl font-bold text-white mb-1">
@@ -70,7 +70,7 @@ export const GameOverScreen: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-black/50 rounded-xl p-4 border border-gray-700">
+          <div className="bg-slate-900/60 backdrop-blur-xl rounded-xl p-4 border border-cyan-400/30">
             <div className="text-center">
               <div className="text-2xl font-bold text-yellow-400 mb-1">
                 {highScore.toLocaleString()}
@@ -96,7 +96,7 @@ export const GameOverScreen: React.FC = () => {
               resetGame();
               useGameStore.getState().startGame();
             }}
-            className="w-full flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl text-xl font-bold text-white transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-2xl border border-green-400/50 backdrop-blur-xl"
           >
             <RotateCcw className="w-6 h-6" />
             <span>INTENTAR DE NUEVO</span>
@@ -106,7 +106,7 @@ export const GameOverScreen: React.FC = () => {
             whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(59, 130, 246, 0.5)' }}
             whileTap={{ scale: 0.95 }}
             onClick={resetGame}
-            className="w-full flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-xl text-xl font-bold text-white transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-2xl border border-blue-400/50 backdrop-blur-xl"
           >
             <Home className="w-6 h-6" />
             <span>MENÚ PRINCIPAL</span>

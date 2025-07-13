@@ -98,7 +98,7 @@ export const VictoryScreen: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSubmitScore}
                   disabled={!playerName.trim()}
-                  className="flex items-center justify-center space-x-2 px-4 md:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:from-gray-500 disabled:to-gray-600 rounded-xl font-bold text-white transition-all duration-300 disabled:cursor-not-allowed text-sm md:text-base"
+                  className="flex items-center justify-center space-x-2 px-4 md:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:from-gray-500 disabled:to-gray-600 rounded-xl font-bold text-white transition-all duration-300 disabled:cursor-not-allowed text-sm md:text-base shadow-2xl border border-cyan-400/50 backdrop-blur-xl"
                 >
                   <Save className="w-4 h-4 md:w-5 md:h-5" />
                   <span>GUARDAR</span>
@@ -134,7 +134,7 @@ export const VictoryScreen: React.FC = () => {
             whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(168, 85, 247, 0.5)' }}
             whileTap={{ scale: 0.95 }}
             onClick={showLeaderboard}
-            className="w-full flex items-center justify-center space-x-2 md:space-x-3 px-4 md:px-8 py-3 md:py-4 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 rounded-xl text-base md:text-xl font-bold text-white transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-2 md:space-x-3 px-4 md:px-8 py-3 md:py-4 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 rounded-xl text-base md:text-xl font-bold text-white transition-all duration-300 shadow-2xl border border-purple-400/50 backdrop-blur-xl"
           >
             <Users className="w-4 h-4 md:w-6 md:h-6" />
             <span>VER LEADERBOARD</span>
@@ -147,7 +147,7 @@ export const VictoryScreen: React.FC = () => {
               resetGame();
               useGameStore.getState().startGame();
             }}
-            className="w-full flex items-center justify-center space-x-2 md:space-x-3 px-4 md:px-8 py-3 md:py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl text-base md:text-xl font-bold text-white transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-2 md:space-x-3 px-4 md:px-8 py-3 md:py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl text-base md:text-xl font-bold text-white transition-all duration-300 shadow-2xl border border-green-400/50 backdrop-blur-xl"
           >
             <Trophy className="w-4 h-4 md:w-6 md:h-6" />
             <span>NUEVA CAMPAÑA</span>
@@ -157,7 +157,7 @@ export const VictoryScreen: React.FC = () => {
             whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(59, 130, 246, 0.5)' }}
             whileTap={{ scale: 0.95 }}
             onClick={resetGame}
-            className="w-full flex items-center justify-center space-x-2 md:space-x-3 px-4 md:px-8 py-3 md:py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-xl text-base md:text-xl font-bold text-white transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-2 md:space-x-3 px-4 md:px-8 py-3 md:py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-xl text-base md:text-xl font-bold text-white transition-all duration-300 shadow-2xl border border-blue-400/50 backdrop-blur-xl"
           >
             <Home className="w-4 h-4 md:w-6 md:h-6" />
             <span>MENÚ PRINCIPAL</span>
