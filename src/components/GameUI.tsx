@@ -70,7 +70,7 @@ export const GameUI: React.FC = () => {
   return (
     <div className="fixed inset-0 pointer-events-none z-40">
       {/* Boss Health Bar (Top) - SOLO CUANDO HAY JEFE ACTIVO */}
-      {showBoss && bossActive && bossHP > 0 && (
+      {bossActive && bossHP > 0 && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-full max-w-md px-4 pointer-events-auto z-50">
           <div className="bg-slate-900/95 backdrop-blur-xl rounded-xl p-3 border border-red-500/50 shadow-2xl">
             <div className="text-center mb-2">

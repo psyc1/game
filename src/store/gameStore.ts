@@ -39,6 +39,10 @@ export interface GameState {
   bossMaxHP: number;
   bossDefeated: boolean;
   
+  // Upgrade system
+  showUpgradeSelection: boolean;
+  availableUpgrades: any[];
+  
   // Star rating system
   levelStars: number[];
   currentLevelStars: number;
@@ -205,6 +209,31 @@ export const useGameStore = create<GameState & GameActions>()(
         bossHP: 0,
         bossMaxHP: 0
       });
+      
+      // Show upgrades after level complete screen
+      setTimeout(() => {
+        const upgrades = [
+          {
+            id: 'upgradeWeapon',
+            nombre: 'Evolución de Arma',
+            descripcion: 'Evoluciona tu arma al siguiente nivel',
+            tipo: 'weapon'
+          },
+          {
+            id: 'health',
+            nombre: 'Nanobots Médicos',
+            descripcion: 'Restaura 25 puntos de vida',
+            tipo: 'stat'
+          },
+          {
+            id: 'shield',
+            nombre: 'Recarga de Escudo',
+            descripcion: 'Restaura 50 puntos de escudo',
+            tipo: 'stat'
+          }
+        ];
+        get().showUpgrades(upgrades);
+      }, 3000);
     },
     
     nextLevel: () => {

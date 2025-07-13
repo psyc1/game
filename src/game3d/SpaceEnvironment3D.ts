@@ -7,26 +7,30 @@ export class SpaceEnvironment3D {
   private planets: THREE.Mesh[] = [];
   private asteroids: THREE.Mesh[] = [];
   private time = 0;
+  private spaceShips: THREE.Mesh[] = [];
+  private energyFields: THREE.Mesh[] = [];
 
   constructor(scene: THREE.Scene) {
     this.scene = scene;
-    this.createAdvancedStarField();
-    this.createRealisticNebulas();
+    this.createRealisticStarField();
+    this.createSpaceNebulas();
     this.createDistantPlanets();
     this.createAsteroidField();
+    this.createSpaceShips();
+    this.createEnergyFields();
     this.createAdvancedLighting();
   }
 
-  private createAdvancedStarField() {
+  private createRealisticStarField() {
     const starGeometry = new THREE.BufferGeometry();
-    const starCount = 3000;
+    const starCount = 5000;
     const positions = new Float32Array(starCount * 3);
     const colors = new Float32Array(starCount * 3);
     const sizes = new Float32Array(starCount);
     
     for (let i = 0; i < starCount; i++) {
-      // Create realistic star distribution in a sphere
-      const radius = 200 + Math.random() * 300;
+      // Distribución esférica realista
+      const radius = 300 + Math.random() * 500;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       
@@ -34,30 +38,30 @@ export class SpaceEnvironment3D {
       positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = radius * Math.cos(phi);
       
-      // Realistic star colors and sizes based on stellar classification
+      // Colores estelares realistas
       const color = new THREE.Color();
       const starType = Math.random();
       
-      if (starType < 0.4) {
-        // Red dwarf stars (most common)
-        color.setHSL(0.05, 0.8, 0.6);
-        sizes[i] = 0.5 + Math.random() * 1;
-      } else if (starType < 0.7) {
-        // Sun-like yellow stars
-        color.setHSL(0.15, 0.9, 0.9);
-        sizes[i] = 1 + Math.random() * 2;
-      } else if (starType < 0.85) {
-        // Blue giants
-        color.setHSL(0.6, 0.9, 0.95);
-        sizes[i] = 2 + Math.random() * 3;
+      if (starType < 0.3) {
+        // Enanas rojas
+        color.setHSL(0.02, 0.9, 0.7);
+        sizes[i] = 0.8 + Math.random() * 1.2;
+      } else if (starType < 0.6) {
+        // Estrellas tipo Sol
+        color.setHSL(0.12, 0.8, 0.9);
+        sizes[i] = 1.2 + Math.random() * 1.8;
+      } else if (starType < 0.8) {
+        // Gigantes azules
+        color.setHSL(0.65, 0.9, 0.95);
+        sizes[i] = 2.0 + Math.random() * 3.0;
       } else if (starType < 0.95) {
-        // White stars
-        color.setHSL(0, 0, 0.95);
-        sizes[i] = 1.5 + Math.random() * 2;
+        // Estrellas blancas
+        color.setHSL(0, 0, 0.98);
+        sizes[i] = 1.5 + Math.random() * 2.5;
       } else {
-        // Red giants (rare)
-        color.setHSL(0, 0.9, 0.7);
-        sizes[i] = 3 + Math.random() * 4;
+        // Supergigantes rojas
+        color.setHSL(0.05, 0.95, 0.8);
+        sizes[i] = 4.0 + Math.random() * 6.0;
       }
       
       colors[i * 3] = color.r;
@@ -81,18 +85,17 @@ export class SpaceEnvironment3D {
     this.scene.add(this.stars);
   }
 
-  private createRealisticNebulas() {
-    // Create multiple realistic nebula layers
+  private createSpaceNebulas() {
     const nebulaConfigs = [
-      { color: 0x4a0e4e, opacity: 0.08, scale: [300, 200, 100], position: [-150, 50, -200] },
-      { color: 0x1a237e, opacity: 0.06, scale: [250, 180, 80], position: [100, -30, -180] },
-      { color: 0x0d47a1, opacity: 0.05, scale: [200, 150, 60], position: [-80, 80, -160] },
-      { color: 0x1565c0, opacity: 0.04, scale: [180, 120, 50], position: [120, -60, -140] },
-      { color: 0x283593, opacity: 0.07, scale: [220, 160, 70], position: [0, 100, -220] }
+      { color: 0x6a0dad, opacity: 0.15, scale: [400, 300, 150], position: [-200, 80, -300] },
+      { color: 0x4169e1, opacity: 0.12, scale: [350, 250, 120], position: [150, -50, -250] },
+      { color: 0x8a2be2, opacity: 0.10, scale: [300, 200, 100], position: [-100, 120, -200] },
+      { color: 0x9370db, opacity: 0.08, scale: [250, 180, 80], position: [200, -80, -180] },
+      { color: 0x483d8b, opacity: 0.14, scale: [320, 220, 110], position: [0, 150, -280] }
     ];
 
     nebulaConfigs.forEach((config, index) => {
-      const geometry = new THREE.SphereGeometry(1, 32, 32);
+      const geometry = new THREE.SphereGeometry(1, 64, 64);
       const material = new THREE.MeshBasicMaterial({
         color: config.color,
         transparent: true,
@@ -114,62 +117,86 @@ export class SpaceEnvironment3D {
   }
 
   private createDistantPlanets() {
-    // Add realistic distant planets
     const planetConfigs = [
-      { size: 8, color: 0x8b4513, position: [-200, 50, -300], rings: false },
-      { size: 12, color: 0x4169e1, position: [250, -80, -350], rings: true },
-      { size: 6, color: 0x228b22, position: [-150, 120, -280], rings: false },
-      { size: 15, color: 0xffa500, position: [180, -40, -400], rings: true }
+      { size: 12, color: 0x8b4513, position: [-300, 80, -400], rings: false, moons: 1 },
+      { size: 18, color: 0x4169e1, position: [350, -120, -450], rings: true, moons: 2 },
+      { size: 8, color: 0x228b22, position: [-200, 180, -350], rings: false, moons: 0 },
+      { size: 22, color: 0xffa500, position: [250, -60, -500], rings: true, moons: 3 }
     ];
 
     planetConfigs.forEach(config => {
-      // Planet body
-      const geometry = new THREE.SphereGeometry(config.size, 32, 32);
+      const group = new THREE.Group();
+      
+      // Planeta principal
+      const geometry = new THREE.SphereGeometry(config.size, 64, 64);
       const material = new THREE.MeshPhongMaterial({
         color: config.color,
         transparent: true,
-        opacity: 0.4,
-        emissive: new THREE.Color(config.color).multiplyScalar(0.1)
+        opacity: 0.6,
+        emissive: new THREE.Color(config.color).multiplyScalar(0.1),
+        shininess: 30
       });
       
       const planet = new THREE.Mesh(geometry, material);
-      planet.position.set(config.position[0], config.position[1], config.position[2]);
+      group.add(planet);
       
-      // Add rings if specified
+      // Anillos si los tiene
       if (config.rings) {
-        const ringGeometry = new THREE.RingGeometry(config.size * 1.5, config.size * 2.2, 64);
+        const ringGeometry = new THREE.RingGeometry(config.size * 1.8, config.size * 2.8, 128);
         const ringMaterial = new THREE.MeshBasicMaterial({
-          color: 0xaaaaaa,
+          color: 0xcccccc,
           transparent: true,
-          opacity: 0.3,
+          opacity: 0.4,
           side: THREE.DoubleSide
         });
         const rings = new THREE.Mesh(ringGeometry, ringMaterial);
-        rings.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.5;
-        planet.add(rings);
+        rings.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.3;
+        group.add(rings);
       }
       
-      this.planets.push(planet);
-      this.scene.add(planet);
+      // Lunas
+      for (let i = 0; i < config.moons; i++) {
+        const moonSize = config.size * 0.1 + Math.random() * config.size * 0.05;
+        const moonGeometry = new THREE.SphereGeometry(moonSize, 16, 16);
+        const moonMaterial = new THREE.MeshPhongMaterial({
+          color: 0x888888,
+          transparent: true,
+          opacity: 0.5
+        });
+        const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+        
+        const distance = config.size * (3 + i * 1.5);
+        const angle = (i / config.moons) * Math.PI * 2;
+        moon.position.set(
+          Math.cos(angle) * distance,
+          (Math.random() - 0.5) * config.size * 0.5,
+          Math.sin(angle) * distance
+        );
+        group.add(moon);
+      }
+      
+      group.position.set(config.position[0], config.position[1], config.position[2]);
+      this.planets.push(group);
+      this.scene.add(group);
     });
   }
 
   private createAsteroidField() {
-    // Create a distant asteroid field
-    for (let i = 0; i < 50; i++) {
-      const size = 0.5 + Math.random() * 2;
+    for (let i = 0; i < 100; i++) {
+      const size = 0.5 + Math.random() * 3;
       const geometry = new THREE.DodecahedronGeometry(size);
       const material = new THREE.MeshPhongMaterial({
         color: 0x666666,
         transparent: true,
-        opacity: 0.6
+        opacity: 0.7,
+        shininess: 10
       });
       
       const asteroid = new THREE.Mesh(geometry, material);
       asteroid.position.set(
-        (Math.random() - 0.5) * 400,
-        (Math.random() - 0.5) * 200,
-        -100 - Math.random() * 200
+        (Math.random() - 0.5) * 600,
+        (Math.random() - 0.5) * 300,
+        -150 - Math.random() * 300
       );
       asteroid.rotation.set(
         Math.random() * Math.PI,
@@ -182,67 +209,126 @@ export class SpaceEnvironment3D {
     }
   }
 
+  private createSpaceShips() {
+    for (let i = 0; i < 5; i++) {
+      const shipGeometry = new THREE.ConeGeometry(2, 8, 6);
+      const shipMaterial = new THREE.MeshPhongMaterial({
+        color: 0x444444,
+        transparent: true,
+        opacity: 0.3,
+        emissive: 0x002244
+      });
+      
+      const ship = new THREE.Mesh(shipGeometry, shipMaterial);
+      ship.position.set(
+        (Math.random() - 0.5) * 400,
+        (Math.random() - 0.5) * 200,
+        -100 - Math.random() * 200
+      );
+      ship.rotation.x = Math.PI / 2;
+      
+      this.spaceShips.push(ship);
+      this.scene.add(ship);
+    }
+  }
+
+  private createEnergyFields() {
+    for (let i = 0; i < 8; i++) {
+      const fieldGeometry = new THREE.SphereGeometry(5 + Math.random() * 10, 16, 16);
+      const fieldMaterial = new THREE.MeshBasicMaterial({
+        color: new THREE.Color().setHSL(Math.random(), 0.8, 0.5),
+        transparent: true,
+        opacity: 0.1,
+        blending: THREE.AdditiveBlending
+      });
+      
+      const field = new THREE.Mesh(fieldGeometry, fieldMaterial);
+      field.position.set(
+        (Math.random() - 0.5) * 500,
+        (Math.random() - 0.5) * 250,
+        -80 - Math.random() * 150
+      );
+      
+      this.energyFields.push(field);
+      this.scene.add(field);
+    }
+  }
+
   private createAdvancedLighting() {
-    // Ambient light for overall illumination
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+    // Luz ambiental suave
+    const ambientLight = new THREE.AmbientLight(0x404080, 0.4);
     this.scene.add(ambientLight);
     
-    // Main directional light (distant star)
-    const directionalLight = new THREE.DirectionalLight(0x4080ff, 0.8);
-    directionalLight.position.set(50, 50, 50);
+    // Luz direccional principal
+    const directionalLight = new THREE.DirectionalLight(0x8080ff, 1.0);
+    directionalLight.position.set(100, 100, 100);
+    directionalLight.castShadow = true;
     this.scene.add(directionalLight);
     
-    // Colored point lights for atmosphere
-    const pointLight1 = new THREE.PointLight(0xff4080, 0.5, 200);
-    pointLight1.position.set(-100, 50, 50);
+    // Luces de colores para atmósfera
+    const pointLight1 = new THREE.PointLight(0xff4080, 0.6, 300);
+    pointLight1.position.set(-150, 80, 80);
     this.scene.add(pointLight1);
     
-    const pointLight2 = new THREE.PointLight(0x40ff80, 0.4, 150);
-    pointLight2.position.set(100, -50, 30);
+    const pointLight2 = new THREE.PointLight(0x40ff80, 0.5, 250);
+    pointLight2.position.set(150, -80, 60);
     this.scene.add(pointLight2);
     
-    const pointLight3 = new THREE.PointLight(0x8040ff, 0.3, 100);
-    pointLight3.position.set(0, 100, -50);
+    const pointLight3 = new THREE.PointLight(0x8040ff, 0.4, 200);
+    pointLight3.position.set(0, 150, -80);
     this.scene.add(pointLight3);
   }
 
   public update(deltaTime: number) {
     this.time += deltaTime;
     
-    // Slow star rotation for depth
-    this.stars.rotation.y += deltaTime * 0.005;
-    this.stars.rotation.x += deltaTime * 0.002;
+    // Rotación lenta de estrellas
+    this.stars.rotation.y += deltaTime * 0.002;
+    this.stars.rotation.x += deltaTime * 0.001;
     
-    // Animate nebulas with subtle movement
+    // Animación de nebulosas
     this.nebulas.forEach((nebula, index) => {
-      nebula.rotation.z += deltaTime * 0.01 * (index + 1);
-      nebula.rotation.y += deltaTime * 0.005 * (index + 1);
+      nebula.rotation.z += deltaTime * 0.005 * (index + 1);
+      nebula.rotation.y += deltaTime * 0.003 * (index + 1);
       
-      // Subtle opacity pulsing
-      const baseOpacity = [0.08, 0.06, 0.05, 0.04, 0.07][index];
-      nebula.material.opacity = baseOpacity + Math.sin(this.time * 0.5 + index) * 0.02;
+      const baseOpacity = [0.15, 0.12, 0.10, 0.08, 0.14][index];
+      nebula.material.opacity = baseOpacity + Math.sin(this.time * 0.3 + index) * 0.03;
     });
     
-    // Rotate planets
+    // Rotación de planetas
     this.planets.forEach((planet, index) => {
-      planet.rotation.y += deltaTime * 0.1 * (index + 1);
-      planet.rotation.x += deltaTime * 0.05 * (index + 1);
+      planet.rotation.y += deltaTime * 0.05 * (index + 1);
       
-      // Subtle orbital movement
-      const orbitSpeed = 0.02 * (index + 1);
-      planet.position.x += Math.sin(this.time * orbitSpeed) * 0.5;
-      planet.position.z += Math.cos(this.time * orbitSpeed) * 0.3;
+      // Movimiento orbital sutil
+      const orbitSpeed = 0.01 * (index + 1);
+      planet.position.x += Math.sin(this.time * orbitSpeed) * 0.3;
+      planet.position.z += Math.cos(this.time * orbitSpeed) * 0.2;
     });
     
-    // Rotate asteroids
+    // Rotación de asteroides
     this.asteroids.forEach((asteroid, index) => {
-      asteroid.rotation.x += deltaTime * 0.5 * (index % 3 + 1);
-      asteroid.rotation.y += deltaTime * 0.3 * (index % 2 + 1);
-      asteroid.rotation.z += deltaTime * 0.4 * (index % 4 + 1);
+      asteroid.rotation.x += deltaTime * 0.3 * (index % 3 + 1);
+      asteroid.rotation.y += deltaTime * 0.2 * (index % 2 + 1);
+      asteroid.rotation.z += deltaTime * 0.25 * (index % 4 + 1);
     });
     
-    // Twinkling stars effect
+    // Movimiento de naves espaciales
+    this.spaceShips.forEach((ship, index) => {
+      ship.position.x += Math.sin(this.time * 0.1 + index) * 0.5;
+      ship.position.y += Math.cos(this.time * 0.15 + index) * 0.3;
+      ship.rotation.z += deltaTime * 0.1;
+    });
+    
+    // Pulsación de campos de energía
+    this.energyFields.forEach((field, index) => {
+      const scale = 1 + Math.sin(this.time * 2 + index) * 0.3;
+      field.scale.setScalar(scale);
+      field.rotation.x += deltaTime * 0.2;
+      field.rotation.y += deltaTime * 0.15;
+    });
+    
+    // Efecto de parpadeo en estrellas
     const starMaterial = this.stars.material as THREE.PointsMaterial;
-    starMaterial.opacity = 0.8 + Math.sin(this.time * 2) * 0.1;
+    starMaterial.opacity = 0.85 + Math.sin(this.time * 1.5) * 0.1;
   }
 }

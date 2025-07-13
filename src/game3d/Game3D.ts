@@ -192,6 +192,7 @@ export class Game3D {
     // Player bullets vs enemies
     const bullets = this.weaponSystem.getBullets();
     const aliens = this.waveManager.getAliens();
+    const boss = this.waveManager.getBoss();
     
     for (let i = bullets.length - 1; i >= 0; i--) {
       const bullet = bullets[i];
@@ -221,15 +222,28 @@ export class Game3D {
         }
       }
       
-      // Boss collision
-      if (gameStore.bossActive && bullet.type !== 'laser') {
-        // Simple boss collision (center of screen, large hitbox)
-        const bossPosition = new THREE.Vector3(0, 8, 0);
-        if (this.weaponSystem.checkCollision(i, bossPosition, 2.0)) {
-          gameStore.damageBoss(bullet.damage);
+      // Boss collision - usar el jefe real del WaveManager
+      if (boss && bullet.type !== 'laser') {
+        if (this.weaponSystem.checkCollision(i, boss.position, 1.5)) {
+          const destroyed = boss.takeDamage(bullet.damage);
           this.weaponSystem.removeBullet(i);
-          this.audioManager.playBossHit();
-          this.particleSystem.createExplosion(bossPosition, '#ff4444');
+          
+          if (destroyed) {
+            this.waveManager.removeBoss();
+            gameStore.addScore(boss.getScore());
+            gameStore.clearBoss();
+            this.audioManager.playExplosion();
+            this.particleSystem.createExplosion(boss.position, boss.getColor());
+            
+            // Complete level after boss defeat
+            setTimeout(() => {
+              gameStore.completeLevel();
+            }, 1000);
+          } else {
+            this.audioManager.playBossHit();
+            this.particleSystem.createExplosion(boss.position, '#ff4444');
+          }
+          break;
         }
       }
     }
@@ -246,12 +260,29 @@ export class Game3D {
       }
     }
     
+    // Boss vs player collision
+    if (boss) {
+      const distance = boss.position.distanceTo(this.player.position);
+      if (distance < 1.0) {
+        gameStore.takeDamage(boss.getDamage());
+        this.audioManager.playHit();
+        this.particleSystem.createExplosion(this.player.position, '#ff4444');
+      }
+    }
+    
     // Power-ups vs player
     const collectedPowerUp = this.powerUpManager.checkCollisions(this.player.position);
     if (collectedPowerUp) {
       this.applyPowerUp(collectedPowerUp);
       this.audioManager.playPowerUp();
       this.particleSystem.createPowerUpEffect(this.player.position);
+    }
+    
+    // Update boss state in store
+    if (boss && !gameStore.bossActive) {
+      gameStore.spawnBoss(boss.currentHP || 100);
+    } else if (!boss && gameStore.bossActive) {
+      gameStore.clearBoss();
     }
   }
 
