@@ -60,12 +60,12 @@ export const MainMenu: React.FC = () => {
                 ]
               }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="text-4xl sm:text-6xl lg:text-8xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+              className="text-3xl sm:text-5xl lg:text-7xl xl:text-8xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent"
             >
               SPACE INVADERS
             </motion.h1>
             
-            <div className="text-lg sm:text-xl lg:text-3xl font-bold text-white mb-4 tracking-wider">
+            <div className="text-base sm:text-lg lg:text-2xl xl:text-3xl font-bold text-white mb-4 tracking-wider">
               <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
                 GALACTIC WARFARE
               </span>

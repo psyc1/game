@@ -41,12 +41,12 @@ export const LevelComplete: React.FC = () => {
           className="mb-8"
         >
           <div className="flex justify-center mb-6">
-            <Trophy className="w-16 h-16 text-yellow-400" />
+            <Trophy className="w-12 h-12 sm:w-16 sm:h-16 text-yellow-400" />
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-cyan-400 mb-4 tracking-wider">
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-cyan-400 mb-4 tracking-wider">
             NIVEL {nivelActual} COMPLETADO
           </h1>
-          <p className="text-xl md:text-2xl text-white mb-6">
+          <p className="text-lg sm:text-xl lg:text-2xl text-white mb-6">
             {getPerformanceText()}
           </p>
         </motion.div>
@@ -67,14 +67,14 @@ export const LevelComplete: React.FC = () => {
                 transition={{ delay: 0.7 + i * 0.2, type: "spring", stiffness: 300 }}
               >
                 <Star 
-                  className="w-12 h-12 md:w-16 md:h-16" 
+                  className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16" 
                   style={{ color: getStarColor(i) }}
                   fill={i < currentLevelStars ? getStarColor(i) : 'transparent'}
                 />
               </motion.div>
             ))}
           </div>
-          <p className="text-lg text-gray-300">
+          <p className="text-base sm:text-lg text-gray-300">
             {currentLevelStars} de 3 estrellas obtenidas
           </p>
         </motion.div>
@@ -84,27 +84,27 @@ export const LevelComplete: React.FC = () => {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1 }}
-          className="bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 md:p-8 border border-cyan-400/30 mb-8"
+          className="bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-cyan-400/30 mb-8 shadow-2xl"
         >
-          <h3 className="text-xl md:text-2xl font-bold text-cyan-400 mb-4">
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-cyan-400 mb-4">
             Rendimiento del Nivel
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-2xl md:text-3xl font-bold text-yellow-400">
+              <div className="text-2xl sm:text-3xl font-bold text-yellow-400">
                 {currentLevelStars}★
               </div>
               <div className="text-gray-400">Estrellas</div>
             </div>
             <div>
-              <div className="text-2xl md:text-3xl font-bold text-green-400">
+              <div className="text-2xl sm:text-3xl font-bold text-green-400">
                 {nivelActual}
               </div>
               <div className="text-gray-400">Nivel</div>
             </div>
             <div>
-              <div className="text-2xl md:text-3xl font-bold text-purple-400">
-                {20 + (nivelActual - 1) * 5}
+              <div className="text-2xl sm:text-3xl font-bold text-purple-400">
+                20
               </div>
               <div className="text-gray-400">Aliens Derrotados</div>
             </div>
@@ -121,7 +121,7 @@ export const LevelComplete: React.FC = () => {
             whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(34, 197, 94, 0.5)' }}
             whileTap={{ scale: 0.95 }}
             onClick={nextLevel}
-            className="flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl text-xl font-bold text-white transition-all duration-300 mx-auto"
+            className="flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl text-xl font-bold text-white transition-all duration-300 mx-auto shadow-2xl border border-green-400/50 backdrop-blur-xl"
           >
             <span>CONTINUAR</span>
             <ArrowRight className="w-6 h-6" />

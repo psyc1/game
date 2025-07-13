@@ -53,7 +53,7 @@ export class Game3D {
     this.powerUpManager = new PowerUpManager(this.scene);
     this.audioManager = new AudioManager();
     
-    // Set up camera
+    // Set up camera for 2D-like view
     this.camera.position.set(0, 0, 15);
     this.camera.lookAt(0, 0, 0);
     
@@ -160,26 +160,26 @@ export class Game3D {
 
   private handleInput(deltaTime: number) {
     const gameStore = useGameStore.getState();
-    const moveSpeed = 0.15; // Movimiento más fluido
+    const moveSpeed = 0.15;
     
-    // Movement
+    // Movement - ÁREA JUGABLE: X entre -4 y 4
     if (this.keys['ArrowLeft'] || this.keys['KeyA']) {
-      if (this.player.position.x > -4) { // Límite izquierdo
+      if (this.player.position.x > -4) {
         this.player.move(-moveSpeed, 0);
       }
     }
     if (this.keys['ArrowRight'] || this.keys['KeyD']) {
-      if (this.player.position.x < 4) { // Límite derecho
+      if (this.player.position.x < 4) {
         this.player.move(moveSpeed, 0);
       }
     }
     if (this.keys['ArrowUp'] || this.keys['KeyW']) {
-      if (this.player.position.y < -2) { // Límite superior
+      if (this.player.position.y < -2) {
         this.player.move(0, moveSpeed);
       }
     }
     if (this.keys['ArrowDown'] || this.keys['KeyS']) {
-      if (this.player.position.y > -7) { // Límite inferior
+      if (this.player.position.y > -7) {
         this.player.move(0, -moveSpeed);
       }
     }
@@ -187,7 +187,7 @@ export class Game3D {
     // Shooting
     if (this.keys['Space'] && this.shootCooldown <= 0) {
       this.weaponSystem.fire(this.player.position, gameStore.nivelArma, this.audioManager);
-      this.shootCooldown = 0.15; // Fixed fire rate
+      this.shootCooldown = 0.15;
     }
     
     if (this.shootCooldown > 0) {
@@ -198,7 +198,7 @@ export class Game3D {
   private checkCollisions() {
     const gameStore = useGameStore.getState();
     
-    // Player bullets vs enemies
+    // Player bullets vs enemies - COLISIONES 2D CORRECTAS
     const bullets = this.weaponSystem.getBullets();
     const aliens = this.waveManager.getAliens();
     const boss = this.waveManager.getBoss();
@@ -206,9 +206,14 @@ export class Game3D {
     for (let i = bullets.length - 1; i >= 0; i--) {
       const bullet = bullets[i];
       
+      // Aliens collision - 2D distance check
       for (const alien of aliens) {
-        if (this.weaponSystem.checkCollision(i, alien.position, 1.0)) {
-          // Hit alien
+        const distance2D = Math.sqrt(
+          Math.pow(bullet.mesh.position.x - alien.position.x, 2) +
+          Math.pow(bullet.mesh.position.y - alien.position.y, 2)
+        );
+        
+        if (distance2D < 0.8) { // 2D collision radius
           const destroyed = alien.takeDamage(bullet.damage);
           this.weaponSystem.removeBullet(i);
           
@@ -231,9 +236,14 @@ export class Game3D {
         }
       }
       
-      // Boss collision - área de colisión más grande y precisa
+      // Boss collision - 2D distance check with larger radius
       if (boss) {
-        if (this.weaponSystem.checkCollision(i, boss.position, 2.5)) {
+        const distance2D = Math.sqrt(
+          Math.pow(bullet.mesh.position.x - boss.position.x, 2) +
+          Math.pow(bullet.mesh.position.y - boss.position.y, 2)
+        );
+        
+        if (distance2D < 1.5) { // Larger 2D collision radius for boss
           const destroyed = boss.takeDamage(bullet.damage);
           this.weaponSystem.removeBullet(i);
           
@@ -260,10 +270,14 @@ export class Game3D {
       }
     }
     
-    // Aliens vs player (collision damage)
+    // Aliens vs player (collision damage) - 2D collision
     for (const alien of aliens) {
-      const distance = alien.position.distanceTo(this.player.position);
-      if (distance < 0.8) {
+      const distance2D = Math.sqrt(
+        Math.pow(alien.position.x - this.player.position.x, 2) +
+        Math.pow(alien.position.y - this.player.position.y, 2)
+      );
+      
+      if (distance2D < 0.8) {
         this.waveManager.removeAlien(alien);
         gameStore.takeDamage(alien.getDamage());
         this.audioManager.playHit();
@@ -272,17 +286,21 @@ export class Game3D {
       }
     }
     
-    // Boss vs player collision
+    // Boss vs player collision - 2D collision
     if (boss) {
-      const distance = boss.position.distanceTo(this.player.position);
-      if (distance < 1.5) {
+      const distance2D = Math.sqrt(
+        Math.pow(boss.position.x - this.player.position.x, 2) +
+        Math.pow(boss.position.y - this.player.position.y, 2)
+      );
+      
+      if (distance2D < 1.5) {
         gameStore.takeDamage(boss.getDamage());
         this.audioManager.playHit();
         this.particleSystem.createExplosion(this.player.position, '#ff4444');
       }
     }
     
-    // Power-ups vs player
+    // Power-ups vs player - 2D collision
     const collectedPowerUp = this.powerUpManager.checkCollisions(this.player.position);
     if (collectedPowerUp) {
       this.applyPowerUp(collectedPowerUp);

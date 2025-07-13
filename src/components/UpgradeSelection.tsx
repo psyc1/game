@@ -44,13 +44,13 @@ export const UpgradeSelection: React.FC = () => {
         <motion.div
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-4">
             NIVEL {nivelActual} COMPLETADO
           </h1>
-          <div className="text-xl md:text-2xl text-white mb-2">¡Excelente trabajo, Comandante!</div>
-          <p className="text-lg md:text-xl text-gray-300">Elige una mejora para continuar tu misión</p>
+          <div className="text-lg sm:text-xl lg:text-2xl text-white mb-2">¡Excelente trabajo, Comandante!</div>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-300">Elige una mejora para continuar tu misión</p>
         </motion.div>
 
         {/* Upgrade Cards */}
@@ -121,7 +121,7 @@ export const UpgradeSelection: React.FC = () => {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="text-center mt-12 space-y-4"
+          className="text-center mt-8 sm:mt-12 space-y-4"
         >
           <p className="text-gray-400 text-base md:text-lg">Haz clic en una carta para seleccionar la mejora</p>
           <div className="flex justify-center space-x-6 md:space-x-8 text-xs md:text-sm text-gray-500">

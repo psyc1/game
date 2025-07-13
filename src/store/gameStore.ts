@@ -27,21 +27,17 @@ export interface GameState {
   showUpgradeSelection: boolean;
   availableUpgrades: any[];
   
-  // Level progress (20 levels system)
+  // Level progress (20 levels system) - CORREGIDO
   enemigosDestruidos: number;
   enemigosRequeridos: number;
   enemigosEscapados: number;
   
-  // Boss system - CORREGIDO
+  // Boss system
   showBoss: boolean;
   bossActive: boolean;
   bossHP: number;
   bossMaxHP: number;
   bossDefeated: boolean;
-  
-  // Upgrade system
-  showUpgradeSelection: boolean;
-  availableUpgrades: any[];
   
   // Star rating system
   levelStars: number[];
@@ -73,7 +69,7 @@ export interface GameActions {
   enemyDestroyed: () => void;
   enemyEscaped: () => void;
   
-  // Boss actions - CORREGIDOS
+  // Boss actions
   spawnBoss: (hp: number) => void;
   damageBoss: (damage: number) => void;
   clearBoss: () => void;
@@ -149,7 +145,7 @@ export const useGameStore = create<GameState & GameActions>()(
         escudoActual: 100,
         escudoMaximo: 100,
         enemigosDestruidos: 0,
-        enemigosRequeridos: 20,
+        enemigosRequeridos: 20, // FIJO: 20 aliens por nivel
         enemigosEscapados: 0,
         armasEquipadas: ['laserSimple'],
         tipoDisparo: 'single',
@@ -160,7 +156,6 @@ export const useGameStore = create<GameState & GameActions>()(
         velocidadDisparo: 1,
         showUpgradeSelection: false,
         isTransitioning: false,
-        // BOSS STATE RESET
         showBoss: false,
         bossActive: false,
         bossHP: 0,
@@ -228,7 +223,7 @@ export const useGameStore = create<GameState & GameActions>()(
           {
             id: 'shield',
             nombre: 'Recarga de Escudo',
-            descripcion: 'Restaura 50 puntos de escudo',
+            descripcion: 'Restaura 30 puntos de escudo',
             tipo: 'stat'
           }
         ];
@@ -242,13 +237,11 @@ export const useGameStore = create<GameState & GameActions>()(
         set({ gameState: 'victory' });
       } else {
         const newLevel = nivelActual + 1;
-        const newRequirement = 20 + (newLevel - 1) * 5;
         set({ 
           nivelActual: newLevel,
           enemigosDestruidos: 0,
-          enemigosRequeridos: newRequirement,
+          enemigosRequeridos: 20, // SIEMPRE 20 aliens por nivel
           enemigosEscapados: 0,
-          // CLEAR BOSS STATE
           showBoss: false,
           bossActive: false,
           bossHP: 0,
@@ -261,7 +254,6 @@ export const useGameStore = create<GameState & GameActions>()(
       }
     },
     
-    // BOSS ACTIONS CORREGIDAS
     spawnBoss: (hp: number) => {
       console.log('Spawning boss with HP:', hp);
       set({
@@ -340,7 +332,7 @@ export const useGameStore = create<GameState & GameActions>()(
     
     upgradeWeapon: () => {
       const { nivelArma } = get();
-      const newLevel = Math.min(nivelArma + 1, 9); // Máximo nivel 9
+      const newLevel = Math.min(nivelArma + 1, 9);
       set({ nivelArma: newLevel });
       console.log(`🔫 Weapon upgraded to level ${newLevel}`);
     },

@@ -22,7 +22,7 @@ export const PauseMenu: React.FC = () => {
           animate={{ y: 0, opacity: 1 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold text-white mb-2">PAUSA</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">PAUSA</h1>
           <p className="text-gray-400">Misión en espera</p>
         </motion.div>
 
@@ -37,7 +37,7 @@ export const PauseMenu: React.FC = () => {
             whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(34, 197, 94, 0.5)' }}
             whileTap={{ scale: 0.95 }}
             onClick={resumeGame}
-            className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-lg text-lg font-bold text-white transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-lg text-lg font-bold text-white transition-all duration-300 shadow-2xl border border-green-400/50 backdrop-blur-xl"
           >
             <Play className="w-5 h-5" />
             <span>CONTINUAR</span>
@@ -46,7 +46,7 @@ export const PauseMenu: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(168, 85, 247, 0.5)' }}
             whileTap={{ scale: 0.95 }}
-            className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 rounded-lg text-lg font-bold text-white transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 rounded-lg text-lg font-bold text-white transition-all duration-300 shadow-2xl border border-purple-400/50 backdrop-blur-xl"
           >
             <Settings className="w-5 h-5" />
             <span>CONFIGURACIÓN</span>
@@ -55,7 +55,7 @@ export const PauseMenu: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(249, 115, 22, 0.5)' }}
             whileTap={{ scale: 0.95 }}
-            className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-lg text-lg font-bold text-white transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-lg text-lg font-bold text-white transition-all duration-300 shadow-2xl border border-orange-400/50 backdrop-blur-xl"
           >
             <Volume2 className="w-5 h-5" />
             <span>AUDIO</span>
@@ -65,7 +65,7 @@ export const PauseMenu: React.FC = () => {
             whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(239, 68, 68, 0.5)' }}
             whileTap={{ scale: 0.95 }}
             onClick={resetGame}
-            className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 rounded-lg text-lg font-bold text-white transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 rounded-lg text-lg font-bold text-white transition-all duration-300 shadow-2xl border border-red-400/50 backdrop-blur-xl"
           >
             <Home className="w-5 h-5" />
             <span>ABANDONAR MISIÓN</span>
