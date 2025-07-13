@@ -51,18 +51,18 @@ export class WaveManager {
     
     this.spawnQueue = [];
     
-    // Generar posiciones según la formación
-    const positions = this.generateFormationPositions();
+    // Generar posiciones aleatorias dentro del área de juego
+    const positions = this.generateRandomPositions();
     let positionIndex = 0;
     
-    // Crear cola de spawn con delays rápidos
+    // Crear cola de spawn con delays muy rápidos
     this.currentWave.composition.forEach(comp => {
       for (let i = 0; i < comp.count; i++) {
         if (positionIndex < positions.length) {
           this.spawnQueue.push({
             alienType: comp.alienType,
             position: positions[positionIndex],
-            delay: positionIndex * 0.05 // Muy rápido: 0.05 segundos entre aliens
+            delay: positionIndex * 0.02 // Muy rápido: 0.02 segundos entre aliens
           });
           positionIndex++;
         }
@@ -72,69 +72,19 @@ export class WaveManager {
     console.log(`Spawn queue created with ${this.spawnQueue.length} aliens`);
   }
 
-  private generateFormationPositions(): THREE.Vector3[] {
-    if (!this.currentWave) return [];
-    
+  private generateRandomPositions(): THREE.Vector3[] {
     const positions: THREE.Vector3[] = [];
     const totalAliens = this.totalAliensInWave;
     
-    // Área de juego: entre x=-6 y x=6, y entre y=8 y y=15
-    const gameAreaWidth = 12; // -6 a 6
+    // Área de juego definida: entre x=-5 y x=5 (entre paneles), y entre y=8 y y=15
+    const gameAreaWidth = 10; // -5 a 5
     const gameAreaHeight = 7;  // 8 a 15
     
-    switch (this.currentWave.formation) {
-      case 'line':
-        // Línea horizontal con posiciones aleatorias en Y
-        for (let i = 0; i < totalAliens; i++) {
-          const x = (Math.random() - 0.5) * gameAreaWidth;
-          const y = 8 + Math.random() * gameAreaHeight;
-          positions.push(new THREE.Vector3(x, y, 0));
-        }
-        break;
-        
-      case 'double_line':
-        // Dos líneas con posiciones aleatorias
-        for (let i = 0; i < totalAliens; i++) {
-          const x = (Math.random() - 0.5) * gameAreaWidth;
-          const y = 8 + Math.random() * gameAreaHeight;
-          positions.push(new THREE.Vector3(x, y, 0));
-        }
-        break;
-        
-      case 'v_formation':
-        // Formación en V con aleatorización
-        for (let i = 0; i < totalAliens; i++) {
-          const x = (Math.random() - 0.5) * gameAreaWidth;
-          const y = 8 + Math.random() * gameAreaHeight;
-          positions.push(new THREE.Vector3(x, y, 0));
-        }
-        break;
-        
-      case 'random_grid':
-        // Rejilla completamente aleatoria
-        for (let i = 0; i < totalAliens; i++) {
-          const x = (Math.random() - 0.5) * gameAreaWidth;
-          const y = 8 + Math.random() * gameAreaHeight;
-          positions.push(new THREE.Vector3(x, y, 0));
-        }
-        break;
-        
-      case 'shield_formation':
-        // Formación de escudo con aleatorización
-        for (let i = 0; i < totalAliens; i++) {
-          const x = (Math.random() - 0.5) * gameAreaWidth;
-          const y = 8 + Math.random() * gameAreaHeight;
-          positions.push(new THREE.Vector3(x, y, 0));
-        }
-        break;
-        
-      default:
-        // Posiciones completamente aleatorias por defecto
-        for (let i = 0; i < totalAliens; i++) {
-          const x = (Math.random() - 0.5) * gameAreaWidth;
-          const y = 8 + Math.random() * gameAreaHeight;
-          positions.push(new THREE.Vector3(x, y, 0));
-        }
+    for (let i = 0; i < totalAliens; i++) {
+      const x = (Math.random() - 0.5) * gameAreaWidth; // -5 a 5
+      const y = 8 + Math.random() * gameAreaHeight; // 8 a 15
+      const z = (Math.random() - 0.5) * 2; // Pequeña variación en Z
+      positions.push(new THREE.Vector3(x, y, z));
     }
     
     return positions;
@@ -143,13 +93,13 @@ export class WaveManager {
   public update(deltaTime: number) {
     if (!this.waveStarted) return;
     
-    // Actualizar aliens existentes
+    // Actualizar aliens existentes con velocidad aumentada
     for (let i = this.aliens.length - 1; i >= 0; i--) {
       const alien = this.aliens[i];
       alien.update(deltaTime);
       
-      // Remover aliens que escaparon
-      if (alien.position.y < -10) {
+      // Remover aliens que escaparon (llegaron abajo)
+      if (alien.position.y < -8) {
         this.removeAlienEscaped(alien);
       }
     }
@@ -158,10 +108,14 @@ export class WaveManager {
     if (this.boss) {
       this.boss.update(deltaTime);
       
-      // Remover jefe si escapa (no debería pasar)
-      if (this.boss.position.y < -10) {
+      // Remover jefe si escapa
+      if (this.boss.position.y < -8) {
         this.boss.dispose();
         this.boss = null;
+        // Notificar escape del jefe
+        if (typeof window !== 'undefined' && (window as any).gameStore) {
+          (window as any).gameStore.getState().takeDamage(50);
+        }
       }
     }
     
@@ -198,10 +152,10 @@ export class WaveManager {
     console.log(`Spawning boss for level ${this.level}`);
     this.bossSpawned = true;
     
-    // Seleccionar tipo de alien para el jefe (el más fuerte disponible)
+    // Seleccionar tipo de alien para el jefe
     const bossAlienType = alienTypes[Math.min(this.level - 1, alienTypes.length - 1)];
     
-    // Posición central del jefe
+    // Posición central del jefe en el área de juego
     const bossPosition = new THREE.Vector3(0, 12, 0);
     
     // Crear jefe con HP escalado
@@ -235,9 +189,9 @@ export class WaveManager {
 
   private removeAlienEscaped(alien: Alien3D) {
     this.removeAlien(alien);
-    // Notificar escape al game store
+    // Notificar escape al game store - pierdes vida
     if (typeof window !== 'undefined' && (window as any).gameStore) {
-      (window as any).gameStore.getState().enemyEscaped();
+      (window as any).gameStore.getState().takeDamage(10);
     }
   }
 
@@ -254,7 +208,6 @@ export class WaveManager {
   }
 
   public isWaveComplete(): boolean {
-    // Wave is complete when all aliens are spawned AND destroyed AND boss is defeated
     const allAliensSpawned = this.spawnQueue.length === 0;
     const noAliensRemaining = this.aliens.length === 0;
     const noBossRemaining = this.boss === null;

@@ -276,13 +276,13 @@ export class Alien3D {
   public update(deltaTime: number) {
     this.animationTime += deltaTime;
     
-    // Movimiento hacia abajo
-    const baseSpeed = this.alienType.speed * deltaTime * (this.isBoss ? 0.5 : 1.5);
+    // Movimiento hacia abajo más rápido
+    const baseSpeed = this.alienType.speed * deltaTime * (this.isBoss ? 0.8 : 3.0);
     this.mesh.position.y -= baseSpeed;
     
     // Movimiento lateral para aliens normales
     if (!this.isBoss) {
-      this.mesh.position.x += Math.sin(this.animationTime * 2 + this.movementOffset) * deltaTime * 0.5;
+      this.mesh.position.x += Math.sin(this.animationTime * 2 + this.movementOffset) * deltaTime * 1.0;
     }
     
     // Rotación y animaciones
@@ -295,8 +295,8 @@ export class Alien3D {
     
     // Animación especial para jefes
     if (this.isBoss) {
-      this.mesh.position.x = Math.sin(this.animationTime * 0.5) * 2;
-      this.mesh.position.z = Math.cos(this.animationTime * 0.3) * 1;
+      this.mesh.position.x += Math.sin(this.animationTime * 0.5) * deltaTime * 2;
+      this.mesh.position.z = Math.cos(this.animationTime * 0.3) * 0.5;
     }
   }
 

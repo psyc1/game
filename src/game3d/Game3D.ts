@@ -198,7 +198,7 @@ export class Game3D {
       const bullet = bullets[i];
       
       for (const alien of aliens) {
-        if (this.weaponSystem.checkCollision(i, alien.position, 0.8)) {
+        if (this.weaponSystem.checkCollision(i, alien.position, 1.0)) {
           // Hit alien
           const destroyed = alien.takeDamage(bullet.damage);
           this.weaponSystem.removeBullet(i);
@@ -222,11 +222,14 @@ export class Game3D {
         }
       }
       
-      // Boss collision - usar el jefe real del WaveManager
-      if (boss && bullet.type !== 'laser') {
-        if (this.weaponSystem.checkCollision(i, boss.position, 1.5)) {
+      // Boss collision - área de colisión más grande y precisa
+      if (boss) {
+        if (this.weaponSystem.checkCollision(i, boss.position, 2.5)) {
           const destroyed = boss.takeDamage(bullet.damage);
           this.weaponSystem.removeBullet(i);
+          
+          // Actualizar HP del jefe en el store
+          gameStore.damageBoss(bullet.damage);
           
           if (destroyed) {
             this.waveManager.removeBoss();
@@ -251,7 +254,7 @@ export class Game3D {
     // Aliens vs player (collision damage)
     for (const alien of aliens) {
       const distance = alien.position.distanceTo(this.player.position);
-      if (distance < 0.6) {
+      if (distance < 0.8) {
         this.waveManager.removeAlien(alien);
         gameStore.takeDamage(alien.getDamage());
         this.audioManager.playHit();
@@ -263,7 +266,7 @@ export class Game3D {
     // Boss vs player collision
     if (boss) {
       const distance = boss.position.distanceTo(this.player.position);
-      if (distance < 1.0) {
+      if (distance < 1.5) {
         gameStore.takeDamage(boss.getDamage());
         this.audioManager.playHit();
         this.particleSystem.createExplosion(this.player.position, '#ff4444');
@@ -276,13 +279,6 @@ export class Game3D {
       this.applyPowerUp(collectedPowerUp);
       this.audioManager.playPowerUp();
       this.particleSystem.createPowerUpEffect(this.player.position);
-    }
-    
-    // Update boss state in store
-    if (boss && !gameStore.bossActive) {
-      gameStore.spawnBoss(boss.currentHP || 100);
-    } else if (!boss && gameStore.bossActive) {
-      gameStore.clearBoss();
     }
   }
 
