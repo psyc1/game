@@ -56,7 +56,7 @@ export class WaveManager {
       this.boss = null;
     }
     
-    // SIEMPRE 20 aliens por nivel
+    // ALWAYS 20 aliens per level - FIXED
     this.totalAliensInWave = 20;
     
     console.log(`📊 FIXED: 20 aliens for level ${level}`);
@@ -115,11 +115,11 @@ export class WaveManager {
   public update(deltaTime: number) {
     if (!this.waveStarted) return;
     
-    // Spawn aliens continuamente hasta completar el total
+    // Spawn aliens continuously until total completed
     if (this.aliensSpawned < this.totalAliensInWave) {
       this.spawnTimer += deltaTime;
       
-      if (this.spawnTimer >= 0.1) { // Cada 0.1 segundos
+      if (this.spawnTimer >= 0.05) { // Every 0.05 seconds - FASTER
         this.spawnRandomAlien();
         this.spawnTimer = 0;
       }
@@ -129,6 +129,9 @@ export class WaveManager {
     for (let i = this.aliens.length - 1; i >= 0; i--) {
       const alien = this.aliens[i];
       alien.update(deltaTime);
+      
+      // Force Z=0 for all aliens
+      alien.position.z = 0;
       
       // Remover aliens que escaparon (llegaron abajo)
       if (alien.position.y < -8) {
@@ -140,6 +143,9 @@ export class WaveManager {
     // Actualizar jefe si existe
     if (this.boss) {
       this.boss.update(deltaTime);
+      
+      // Force Z=0 for boss
+      this.boss.position.z = 0;
       
       // Remover jefe si escapa
       if (this.boss.position.y < -8) {
@@ -185,12 +191,12 @@ export class WaveManager {
     // Seleccionar tipo de alien aleatorio
     const randomAlienType = alienTypes[Math.floor(Math.random() * alienTypes.length)];
     
-    // ÁREA JUGABLE: Solo entre las barras laterales
-    // X: -4 a 4 (área central entre paneles)
-    // Y: 8 a 12 (parte superior visible)
+    // PLAYABLE AREA: Only between side panels
+    // X: -4 to 4 (central area between panels)
+    // Y: 8 to 12 (visible top area)
     const x = -4 + Math.random() * 8; // -4 a 4
     const y = 8 + Math.random() * 4;  // 8 a 12
-    const z = (Math.random() - 0.5) * 0.5; // Pequeña variación
+    const z = 0; // ALWAYS Z=0 for 2D collisions
     
     const position = new THREE.Vector3(x, y, z);
     const alien = new Alien3D(this.scene, position, randomAlienType, false);

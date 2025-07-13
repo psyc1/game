@@ -22,7 +22,7 @@ export class Alien3D {
     this.createAlienMesh();
     this.mesh.position.copy(position);
     
-    // FORZAR POSICIÓN Z=0 PARA COLISIONES 2D
+    // FORCE Z=0 for 2D collisions
     this.mesh.position.z = 0;
     
     scene.add(this.mesh);
@@ -30,7 +30,7 @@ export class Alien3D {
 
   private createAlienMesh() {
     const color = new THREE.Color(this.alienType.color);
-    const size = this.isBoss ? this.alienType.size * 1.5 : this.alienType.size; // Jefe más pequeño
+    const size = this.isBoss ? this.alienType.size * 1.2 : this.alienType.size; // Boss smaller
     
     // Crear cuerpo principal del alien
     this.createAlienBody(color, size);
@@ -279,11 +279,14 @@ export class Alien3D {
   public update(deltaTime: number) {
     this.animationTime += deltaTime;
     
-    // Movimiento hacia abajo más rápido
-    const baseSpeed = this.alienType.speed * deltaTime * (this.isBoss ? 0.8 : 3.0);
+    // Faster downward movement
+    const baseSpeed = this.alienType.speed * deltaTime * (this.isBoss ? 1.0 : 4.0);
     this.mesh.position.y -= baseSpeed;
     
-    // Movimiento lateral para aliens normales
+    // FORCE Z=0 always for 2D collisions
+    this.mesh.position.z = 0;
+    
+    // Lateral movement for normal aliens
     if (!this.isBoss) {
       this.mesh.position.x += Math.sin(this.animationTime * 2 + this.movementOffset) * deltaTime * 1.0;
     }
@@ -293,13 +296,13 @@ export class Alien3D {
     this.mesh.rotation.z = Math.sin(this.animationTime * 3) * 0.1;
     
     // Efecto de pulsación
-    const scale = (this.isBoss ? this.alienType.size * 3 : this.alienType.size) * (1 + Math.sin(this.animationTime * 4) * 0.05);
+    const scale = (this.isBoss ? this.alienType.size * 1.2 : this.alienType.size) * (1 + Math.sin(this.animationTime * 4) * 0.05);
     this.mesh.scale.setScalar(scale);
     
     // Animación especial para jefes
     if (this.isBoss) {
       this.mesh.position.x += Math.sin(this.animationTime * 0.5) * deltaTime * 2;
-      this.mesh.position.z = Math.cos(this.animationTime * 0.3) * 0.5;
+      this.mesh.position.z = 0; // Keep boss at Z=0
     }
   }
 

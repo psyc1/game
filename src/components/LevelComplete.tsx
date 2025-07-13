@@ -2,10 +2,9 @@ import React from 'react';
 import { useGameStore } from '../store/gameStore';
 import { animated, useSpring } from '@react-spring/web';
 import { motion } from 'framer-motion';
-import { Star, Trophy, ArrowRight } from 'lucide-react';
 
 export const LevelComplete: React.FC = () => {
-  const { nivelActual, currentLevelStars, nextLevel } = useGameStore();
+  const { nivelActual, currentLevelStars, nextLevel, puntuacion } = useGameStore();
 
   const containerSpring = useSpring({
     from: { opacity: 0, scale: 0.8 },
@@ -13,27 +12,10 @@ export const LevelComplete: React.FC = () => {
     config: { tension: 200, friction: 25 }
   });
 
-  const getStarColor = (index: number) => {
-    return index < currentLevelStars ? '#fbbf24' : '#374151';
-  };
-
-  const getPerformanceText = () => {
-    switch (currentLevelStars) {
-      case 3:
-        return 'Mission accomplished';
-      case 2:
-        return 'Mission accomplished';
-      case 1:
-        return 'Mission accomplished';
-      default:
-        return 'Mission accomplished';
-    }
-  };
-
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-purple-900/95 via-blue-900/95 to-indigo-900/95 backdrop-blur-md flex items-center justify-center p-4 z-50">
       <animated.div style={containerSpring} className="text-center max-w-md mx-auto">
-        {/* AWESOME! Title - Siguiendo referencia exacta */}
+        {/* AWESOME! Title - Following exact reference */}
         <motion.div
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -44,13 +26,13 @@ export const LevelComplete: React.FC = () => {
             {/* Glow effect background */}
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-purple-500/20 rounded-2xl blur-xl" />
             
-            {/* Main card */}
+            {/* Main card - Following reference design exactly */}
             <div className="relative bg-gradient-to-br from-purple-600/30 to-blue-600/30 backdrop-blur-xl rounded-2xl border border-cyan-400/50 p-8 shadow-2xl">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-wider">
                 AWESOME!
               </h1>
               <p className="text-lg sm:text-xl text-cyan-300 mb-6">
-                {getPerformanceText()}
+                Mission accomplished
               </p>
               
               {/* Decorative elements like in reference */}
@@ -62,7 +44,7 @@ export const LevelComplete: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Final Score Section */}
+        {/* Final Score Section - Following reference format */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -74,12 +56,12 @@ export const LevelComplete: React.FC = () => {
               [ Final Score ]
             </div>
             <div className="text-3xl font-bold text-white">
-              {useGameStore.getState().puntuacion.toLocaleString()}
+              {puntuacion.toLocaleString()}
             </div>
           </div>
         </motion.div>
 
-        {/* Next Level Button - Siguiendo referencia */}
+        {/* Next Level Button - Following reference exactly */}
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

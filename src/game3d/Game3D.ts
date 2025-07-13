@@ -162,7 +162,7 @@ export class Game3D {
     const gameStore = useGameStore.getState();
     const moveSpeed = 0.15;
     
-    // Movement - ÁREA JUGABLE: X entre -4 y 4
+    // Movement - PLAYABLE AREA: X between -4 and 4
     if (this.keys['ArrowLeft'] || this.keys['KeyA']) {
       if (this.player.position.x > -4) {
         this.player.move(-moveSpeed, 0);
@@ -198,7 +198,7 @@ export class Game3D {
   private checkCollisions() {
     const gameStore = useGameStore.getState();
     
-    // Player bullets vs enemies - COLISIONES 2D CORRECTAS
+    // Player bullets vs enemies - CORRECT 2D COLLISIONS
     const bullets = this.weaponSystem.getBullets();
     const aliens = this.waveManager.getAliens();
     const boss = this.waveManager.getBoss();
@@ -206,13 +206,13 @@ export class Game3D {
     for (let i = bullets.length - 1; i >= 0; i--) {
       const bullet = bullets[i];
       
-      // Aliens collision - 2D distance check
+      // Aliens collision - 2D distance check (more precise)
       for (const alien of aliens) {
         const dx = bullet.mesh.position.x - alien.position.x;
         const dy = bullet.mesh.position.y - alien.position.y;
-        const distance2D = Math.sqrt(dx * dx + dy * dy);
+        const distance2D = dx * dx + dy * dy; // Faster without sqrt
         
-        if (distance2D < 0.6) { // Radio más pequeño para colisiones precisas
+        if (distance2D < 0.36) { // 0.6^2 = 0.36 for precise collisions
           const destroyed = alien.takeDamage(bullet.damage);
           this.weaponSystem.removeBullet(i);
           
@@ -235,17 +235,17 @@ export class Game3D {
         }
       }
       
-      // Boss collision - 2D distance check with larger radius
+      // Boss collision - 2D distance check
       if (boss) {
         const dx = bullet.mesh.position.x - boss.position.x;
         const dy = bullet.mesh.position.y - boss.position.y;
-        const distance2D = Math.sqrt(dx * dx + dy * dy);
+        const distance2D = dx * dx + dy * dy;
         
-        if (distance2D < 1.0) { // Radio más pequeño para jefe
+        if (distance2D < 1.0) { // 1.0^2 = 1.0 for boss
           const destroyed = boss.takeDamage(bullet.damage);
           this.weaponSystem.removeBullet(i);
           
-          // Actualizar HP del jefe en el store
+          // Update boss HP in store
           gameStore.damageBoss(bullet.damage);
           
           if (destroyed) {
@@ -268,13 +268,13 @@ export class Game3D {
       }
     }
     
-    // Aliens vs player (collision damage) - 2D collision
+    // Aliens vs player - 2D collision
     for (const alien of aliens) {
       const dx = alien.position.x - this.player.position.x;
       const dy = alien.position.y - this.player.position.y;
-      const distance2D = Math.sqrt(dx * dx + dy * dy);
+      const distance2D = dx * dx + dy * dy;
       
-      if (distance2D < 0.6) {
+      if (distance2D < 0.36) { // 0.6^2
         this.waveManager.removeAlien(alien);
         gameStore.takeDamage(alien.getDamage());
         this.audioManager.playHit();
@@ -283,13 +283,13 @@ export class Game3D {
       }
     }
     
-    // Boss vs player collision - 2D collision
+    // Boss vs player - 2D collision
     if (boss) {
       const dx = boss.position.x - this.player.position.x;
       const dy = boss.position.y - this.player.position.y;
-      const distance2D = Math.sqrt(dx * dx + dy * dy);
+      const distance2D = dx * dx + dy * dy;
       
-      if (distance2D < 1.0) {
+      if (distance2D < 1.0) { // 1.0^2
         gameStore.takeDamage(boss.getDamage());
         this.audioManager.playHit();
         this.particleSystem.createExplosion(this.player.position, '#ff4444');

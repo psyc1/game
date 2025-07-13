@@ -27,7 +27,7 @@ export interface GameState {
   showUpgradeSelection: boolean;
   availableUpgrades: any[];
   
-  // Level progress (20 levels system) - CORREGIDO
+  // Level progress - FIXED: Always 20 aliens per level
   enemigosDestruidos: number;
   enemigosRequeridos: number;
   enemigosEscapados: number;
@@ -116,7 +116,7 @@ const initialState: GameState = {
   showUpgradeSelection: false,
   availableUpgrades: [],
   enemigosDestruidos: 0,
-  enemigosRequeridos: 20,
+  enemigosRequeridos: 20, // ALWAYS 20
   enemigosEscapados: 0,
   showBoss: false,
   bossActive: false,
@@ -145,7 +145,7 @@ export const useGameStore = create<GameState & GameActions>()(
         escudoActual: 100,
         escudoMaximo: 100,
         enemigosDestruidos: 0,
-        enemigosRequeridos: 20, // FIJO: 20 aliens por nivel
+        enemigosRequeridos: 20, // FIXED: Always 20
         enemigosEscapados: 0,
         armasEquipadas: ['laserSimple'],
         tipoDisparo: 'single',
@@ -240,7 +240,7 @@ export const useGameStore = create<GameState & GameActions>()(
         set({ 
           nivelActual: newLevel,
           enemigosDestruidos: 0,
-          enemigosRequeridos: 20, // SIEMPRE 20 aliens por nivel
+          enemigosRequeridos: 20, // ALWAYS 20
           enemigosEscapados: 0,
           showBoss: false,
           bossActive: false,
@@ -344,7 +344,8 @@ export const useGameStore = create<GameState & GameActions>()(
     
     enemyDestroyed: () => {
       const { enemigosDestruidos, bossActive } = get();
-      const newDestruidos = Math.min(enemigosDestruidos + 1, 20); // NUNCA más de 20
+      // FIXED: Never exceed 20
+      const newDestruidos = Math.min(enemigosDestruidos + 1, 20);
       set({ enemigosDestruidos: newDestruidos });
       
       console.log(`Enemies destroyed: ${newDestruidos}/20, Boss active: ${bossActive}`);
