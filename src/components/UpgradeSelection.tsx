@@ -28,8 +28,17 @@ export const UpgradeSelection: React.FC = () => {
     return iconMap[upgrade.id] || Star;
   };
 
+  const getUpgradeColor = (upgrade: any) => {
+    const colorMap: { [key: string]: string } = {
+      upgradeWeapon: 'from-yellow-500/20 to-orange-500/20 border-yellow-400/50',
+      health: 'from-green-500/20 to-emerald-500/20 border-green-400/50',
+      shield: 'from-blue-500/20 to-cyan-500/20 border-blue-400/50'
+    };
+    return colorMap[upgrade.id] || 'from-purple-500/20 to-pink-500/20 border-purple-400/50';
+  };
+
   return (
-    <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-purple-900/95 to-blue-900/95 backdrop-blur-md flex items-center justify-center p-4">
+    <div className="absolute inset-0 bg-slate-900/95 backdrop-blur-md flex items-center justify-center p-4 z-50">
       <animated.div style={containerSpring} className="max-w-6xl w-full">
         {/* Header */}
         <motion.div
@@ -51,6 +60,7 @@ export const UpgradeSelection: React.FC = () => {
             if (!upgrade) return null;
 
             const IconComponent = getUpgradeIcon(upgrade);
+            const colorClass = getUpgradeColor(upgrade);
 
             return (
               <animated.div key={upgrade.id} style={style}>
@@ -62,14 +72,14 @@ export const UpgradeSelection: React.FC = () => {
                   }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => selectUpgrade(upgrade.id)}
-                  className="relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-cyan-400/30 cursor-pointer transition-all duration-300 hover:border-cyan-400/60 group overflow-hidden backdrop-blur-sm h-full"
+                  className={`relative p-6 md:p-8 rounded-2xl bg-gradient-to-br ${colorClass} cursor-pointer transition-all duration-300 group overflow-hidden backdrop-blur-xl h-full shadow-2xl`}
                 >
                   {/* Background glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   
                   {/* Icon */}
                   <div className="relative flex justify-center mb-6">
-                    <div className="p-4 md:p-6 rounded-full bg-gradient-to-br from-cyan-400/20 to-purple-500/20 backdrop-blur-sm border border-cyan-400/30">
+                    <div className="p-4 md:p-6 rounded-full bg-slate-900/60 backdrop-blur-sm border border-cyan-400/30 shadow-2xl">
                       <IconComponent className="w-8 h-8 md:w-12 md:h-12 text-cyan-400" />
                     </div>
                   </div>
@@ -85,7 +95,7 @@ export const UpgradeSelection: React.FC = () => {
                     
                     {/* Type badge */}
                     <div className="flex justify-center">
-                      <span className="px-3 md:px-4 py-1 md:py-2 bg-slate-700/60 rounded-full text-cyan-400 text-xs md:text-sm font-semibold uppercase tracking-wide border border-cyan-400/30">
+                      <span className="px-3 md:px-4 py-1 md:py-2 bg-slate-900/60 rounded-full text-cyan-400 text-xs md:text-sm font-semibold uppercase tracking-wide border border-cyan-400/30 backdrop-blur-sm">
                         {upgrade.tipo === 'weapon' ? 'Arma' : 
                          upgrade.tipo === 'stat' ? 'Estadística' : 'Especial'}
                       </span>
@@ -120,7 +130,7 @@ export const UpgradeSelection: React.FC = () => {
               <span>Mejora de Arma</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
               <span>Mejora de Vida</span>
             </div>
             <div className="flex items-center space-x-2">
