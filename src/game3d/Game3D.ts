@@ -70,7 +70,8 @@ export class Game3D {
     document.addEventListener('keydown', (event) => {
       this.keys[event.code] = true;
       
-      if (event.code === 'Space' || event.code === 'KeyP' || event.code === 'Escape') {
+      // Prevenir comportamiento por defecto para teclas del juego
+      if (['Space', 'KeyP', 'Escape', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.code)) {
         event.preventDefault();
       }
       
@@ -159,20 +160,28 @@ export class Game3D {
 
   private handleInput(deltaTime: number) {
     const gameStore = useGameStore.getState();
-    const moveSpeed = 0.12;
+    const moveSpeed = 0.15; // Movimiento más fluido
     
     // Movement
     if (this.keys['ArrowLeft'] || this.keys['KeyA']) {
-      this.player.move(-moveSpeed, 0);
+      if (this.player.position.x > -4) { // Límite izquierdo
+        this.player.move(-moveSpeed, 0);
+      }
     }
     if (this.keys['ArrowRight'] || this.keys['KeyD']) {
-      this.player.move(moveSpeed, 0);
+      if (this.player.position.x < 4) { // Límite derecho
+        this.player.move(moveSpeed, 0);
+      }
     }
     if (this.keys['ArrowUp'] || this.keys['KeyW']) {
-      this.player.move(0, moveSpeed);
+      if (this.player.position.y < -2) { // Límite superior
+        this.player.move(0, moveSpeed);
+      }
     }
     if (this.keys['ArrowDown'] || this.keys['KeyS']) {
-      this.player.move(0, -moveSpeed);
+      if (this.player.position.y > -7) { // Límite inferior
+        this.player.move(0, -moveSpeed);
+      }
     }
     
     // Shooting

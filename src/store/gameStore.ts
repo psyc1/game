@@ -340,8 +340,9 @@ export const useGameStore = create<GameState & GameActions>()(
     
     upgradeWeapon: () => {
       const { nivelArma } = get();
-      const newLevel = Math.min(nivelArma + 1, 9);
+      const newLevel = Math.min(nivelArma + 1, 9); // Máximo nivel 9
       set({ nivelArma: newLevel });
+      console.log(`🔫 Weapon upgraded to level ${newLevel}`);
     },
     
     addScore: (points: number) => {

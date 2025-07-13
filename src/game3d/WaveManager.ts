@@ -116,6 +116,16 @@ export class WaveManager {
   public update(deltaTime: number) {
     if (!this.waveStarted) return;
     
+    // Spawn aliens continuamente hasta completar el total
+    if (this.aliensSpawned < this.totalAliensInWave) {
+      this.spawnTimer += deltaTime;
+      
+      if (this.spawnTimer >= 0.1) { // Cada 0.1 segundos
+        this.spawnRandomAlien();
+        this.spawnTimer = 0;
+      }
+    }
+    
     // Actualizar aliens existentes
     for (let i = this.aliens.length - 1; i >= 0; i--) {
       const alien = this.aliens[i];
@@ -168,6 +178,27 @@ export class WaveManager {
     this.aliens.push(alien);
     this.aliensSpawned++;
     console.log(`👾 Spawned alien ${this.aliensSpawned}/${this.totalAliensInWave}, active: ${this.aliens.length}`);
+  }
+
+  private spawnRandomAlien() {
+    if (this.aliensSpawned >= this.totalAliensInWave) return;
+    
+    // Seleccionar tipo de alien aleatorio
+    const randomAlienType = alienTypes[Math.floor(Math.random() * alienTypes.length)];
+    
+    // ÁREA JUGABLE: Solo entre las barras laterales
+    // X: -4 a 4 (área central entre paneles)
+    // Y: 8 a 12 (parte superior visible)
+    const x = -4 + Math.random() * 8; // -4 a 4
+    const y = 8 + Math.random() * 4;  // 8 a 12
+    const z = (Math.random() - 0.5) * 0.5; // Pequeña variación
+    
+    const position = new THREE.Vector3(x, y, z);
+    const alien = new Alien3D(this.scene, position, randomAlienType, false);
+    this.aliens.push(alien);
+    this.aliensSpawned++;
+    
+    console.log(`👾 Spawned alien ${this.aliensSpawned}/${this.totalAliensInWave} at (${x.toFixed(1)}, ${y.toFixed(1)})`);
   }
 
   private spawnBoss() {

@@ -18,7 +18,8 @@ export const GameUI: React.FC = () => {
     resetGame,
     bossHP,
     bossMaxHP,
-    bossActive
+    bossActive,
+    showBoss
   } = useGameStore();
 
   const healthPercentage = (vidaJugador / vidaMaxima) * 100;
@@ -69,51 +70,51 @@ export const GameUI: React.FC = () => {
   return (
     <div className="fixed inset-0 pointer-events-none z-40">
       {/* Boss Health Bar - SOLO CUANDO HAY JEFE ACTIVO */}
-      {bossActive && bossHP > 0 && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-full max-w-md px-4 pointer-events-auto z-50">
-          <div className="bg-slate-900/95 backdrop-blur-xl rounded-2xl p-4 border border-red-500/50 shadow-2xl">
-            <div className="text-center mb-3">
-              <span className="text-red-400 font-bold text-lg uppercase tracking-wider">JEFE FINAL</span>
+      {showBoss && bossActive && bossHP > 0 && (
+        <div className="absolute top-2 sm:top-4 left-1/2 transform -translate-x-1/2 w-full max-w-xs sm:max-w-md px-2 sm:px-4 pointer-events-auto z-50">
+          <div className="bg-slate-900/95 backdrop-blur-xl rounded-xl sm:rounded-2xl p-2 sm:p-4 border border-red-500/50 shadow-2xl">
+            <div className="text-center mb-2 sm:mb-3">
+              <span className="text-red-400 font-bold text-sm sm:text-lg uppercase tracking-wider">JEFE FINAL</span>
             </div>
-            <div className="relative h-4 bg-slate-800/60 rounded-full border border-red-400/30 overflow-hidden">
+            <div className="relative h-3 sm:h-4 bg-slate-800/60 rounded-full border border-red-400/30 overflow-hidden">
               <animated.div
                 style={bossBarSpring}
                 className="h-full rounded-full shadow-lg"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full animate-pulse" />
             </div>
-            <div className="text-center mt-2">
-              <span className="text-white font-bold text-lg">{bossHP}/{bossMaxHP}</span>
+            <div className="text-center mt-1 sm:mt-2">
+              <span className="text-white font-bold text-sm sm:text-lg">{bossHP}/{bossMaxHP}</span>
             </div>
           </div>
         </div>
       )}
 
-      {/* Left Panel - Game Stats */}
-      <div className="absolute left-4 top-4 bottom-4 w-72 lg:w-80 pointer-events-auto">
-        <div className="h-full bg-slate-900/95 backdrop-blur-xl rounded-2xl border border-cyan-400/30 shadow-2xl p-4 lg:p-6 flex flex-col overflow-y-auto">
+      {/* Left Panel - Game Stats - RESPONSIVO */}
+      <div className="absolute left-1 sm:left-2 lg:left-4 top-1 sm:top-2 lg:top-4 bottom-1 sm:bottom-2 lg:bottom-4 w-44 sm:w-56 lg:w-72 xl:w-80 pointer-events-auto">
+        <div className="h-full bg-slate-900/95 backdrop-blur-xl rounded-xl lg:rounded-2xl border border-cyan-400/30 shadow-2xl p-2 sm:p-3 lg:p-6 flex flex-col overflow-y-auto">
           
           {/* Level and Score */}
-          <div className="text-center mb-6 pb-4 border-b border-cyan-400/30">
-            <div className="text-2xl lg:text-4xl font-bold text-cyan-400 mb-2 tracking-wider">
+          <div className="text-center mb-3 sm:mb-4 lg:mb-6 pb-2 sm:pb-3 lg:pb-4 border-b border-cyan-400/30">
+            <div className="text-lg sm:text-xl lg:text-2xl xl:text-4xl font-bold text-cyan-400 mb-1 sm:mb-2 tracking-wider">
               NIVEL {nivelActual}
             </div>
-            <animated.div className="text-lg lg:text-2xl font-bold text-yellow-400">
+            <animated.div className="text-sm sm:text-base lg:text-lg xl:text-2xl font-bold text-yellow-400">
               {scoreSpring.number.to(n => Math.floor(n).toLocaleString())}
             </animated.div>
-            <div className="text-sm text-gray-300 uppercase tracking-wider">Puntos</div>
+            <div className="text-xs sm:text-sm text-gray-300 uppercase tracking-wider">Puntos</div>
           </div>
 
           {/* Health */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center space-x-2">
-                <Heart className="w-5 h-5 text-red-400" />
-                <span className="text-red-400 font-bold uppercase tracking-wide text-sm">Vida</span>
+          <div className="mb-2 sm:mb-3 lg:mb-4">
+            <div className="flex items-center justify-between mb-1 sm:mb-2">
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <Heart className="w-3 h-3 sm:w-4 h-4 lg:w-5 lg:h-5 text-red-400" />
+                <span className="text-red-400 font-bold uppercase tracking-wide text-xs sm:text-sm">Vida</span>
               </div>
-              <span className="text-white font-bold text-sm">{vidaJugador}/{vidaMaxima}</span>
+              <span className="text-white font-bold text-xs sm:text-sm">{vidaJugador}/{vidaMaxima}</span>
             </div>
-            <div className="relative h-3 bg-slate-800/50 rounded-full border border-red-400/30 overflow-hidden">
+            <div className="relative h-2 sm:h-3 bg-slate-800/50 rounded-full border border-red-400/30 overflow-hidden">
               <animated.div
                 style={healthBarSpring}
                 className="h-full rounded-full shadow-lg"
@@ -122,15 +123,15 @@ export const GameUI: React.FC = () => {
           </div>
 
           {/* Shield */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center space-x-2">
-                <Shield className="w-5 h-5 text-blue-400" />
-                <span className="text-blue-400 font-bold uppercase tracking-wide text-sm">Escudo</span>
+          <div className="mb-2 sm:mb-3 lg:mb-4">
+            <div className="flex items-center justify-between mb-1 sm:mb-2">
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <Shield className="w-3 h-3 sm:w-4 h-4 lg:w-5 lg:h-5 text-blue-400" />
+                <span className="text-blue-400 font-bold uppercase tracking-wide text-xs sm:text-sm">Escudo</span>
               </div>
-              <span className="text-white font-bold text-sm">{Math.floor(escudoActual)}/{escudoMaximo}</span>
+              <span className="text-white font-bold text-xs sm:text-sm">{Math.floor(escudoActual)}/{escudoMaximo}</span>
             </div>
-            <div className="relative h-3 bg-slate-800/50 rounded-full border border-blue-400/30 overflow-hidden">
+            <div className="relative h-2 sm:h-3 bg-slate-800/50 rounded-full border border-blue-400/30 overflow-hidden">
               <animated.div
                 style={shieldBarSpring}
                 className="h-full rounded-full shadow-lg"
@@ -139,34 +140,34 @@ export const GameUI: React.FC = () => {
           </div>
 
           {/* Level Progress */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-purple-400 font-bold uppercase tracking-wide text-sm">Progreso</span>
-              <span className="text-white font-bold text-sm">{enemigosDestruidos}/{enemigosRequeridos}</span>
+          <div className="mb-3 sm:mb-4 lg:mb-6">
+            <div className="flex items-center justify-between mb-1 sm:mb-2">
+              <span className="text-purple-400 font-bold uppercase tracking-wide text-xs sm:text-sm">Progreso</span>
+              <span className="text-white font-bold text-xs sm:text-sm">{enemigosDestruidos}/{enemigosRequeridos}</span>
             </div>
-            <div className="relative h-3 bg-slate-800/50 rounded-full border border-purple-400/30 overflow-hidden">
+            <div className="relative h-2 sm:h-3 bg-slate-800/50 rounded-full border border-purple-400/30 overflow-hidden">
               <animated.div
                 style={progressBarSpring}
                 className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 rounded-full shadow-lg"
               />
             </div>
-            <div className="text-center mt-2 text-gray-300 font-semibold text-sm">
+            <div className="text-center mt-1 sm:mt-2 text-gray-300 font-semibold text-xs sm:text-sm">
               Restantes: {enemigosRequeridos - enemigosDestruidos}
             </div>
           </div>
 
           {/* Current Weapon */}
-          <div className="mb-6">
-            <div className="text-center mb-2">
-              <span className="text-yellow-400 font-bold uppercase tracking-wide text-sm">Arma Actual</span>
+          <div className="mb-3 sm:mb-4 lg:mb-6">
+            <div className="text-center mb-1 sm:mb-2">
+              <span className="text-yellow-400 font-bold uppercase tracking-wide text-xs sm:text-sm">Arma Actual</span>
             </div>
             <div 
-              className="p-4 bg-slate-800/60 rounded-2xl border-2 backdrop-blur-sm"
+              className="p-2 sm:p-3 lg:p-4 bg-slate-800/60 rounded-xl lg:rounded-2xl border-2 backdrop-blur-sm"
               style={{ borderColor: getWeaponColor(nivelArma) + '60' }}
             >
               <div className="text-center">
                 <div 
-                  className="text-lg font-bold uppercase tracking-wider mb-2"
+                  className="text-sm sm:text-base lg:text-lg font-bold uppercase tracking-wider mb-1 sm:mb-2"
                   style={{ color: getWeaponColor(nivelArma) }}
                 >
                   {getWeaponName(nivelArma)}
@@ -177,7 +178,7 @@ export const GameUI: React.FC = () => {
                     {[...Array(10)].map((_, i) => (
                       <div
                         key={i}
-                        className={`w-2 h-2 rounded-full ${
+                        className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
                           i <= nivelArma 
                             ? 'bg-gradient-to-r from-yellow-400 to-orange-500' 
                             : 'bg-gray-600'
@@ -190,8 +191,8 @@ export const GameUI: React.FC = () => {
             </div>
           </div>
 
-          {/* Controls */}
-          <div className="mt-auto">
+          {/* Controls - Solo en pantallas grandes */}
+          <div className="mt-auto hidden lg:block">
             <div className="text-white font-bold mb-3 text-center text-sm">CONTROLES</div>
             <div className="space-y-2 text-sm text-gray-300">
               <div className="flex items-center justify-between">
@@ -211,80 +212,101 @@ export const GameUI: React.FC = () => {
         </div>
       </div>
 
-      {/* Right Panel - Controls and Info */}
-      <div className="absolute right-4 top-4 bottom-4 w-72 lg:w-80 pointer-events-auto">
-        <div className="h-full bg-slate-900/95 backdrop-blur-xl rounded-2xl border border-cyan-400/30 shadow-2xl p-4 lg:p-6 flex flex-col overflow-y-auto">
+      {/* Right Panel - Controls and Info - RESPONSIVO */}
+      <div className="absolute right-1 sm:right-2 lg:right-4 top-1 sm:top-2 lg:top-4 bottom-1 sm:bottom-2 lg:bottom-4 w-44 sm:w-56 lg:w-72 xl:w-80 pointer-events-auto">
+        <div className="h-full bg-slate-900/95 backdrop-blur-xl rounded-xl lg:rounded-2xl border border-cyan-400/30 shadow-2xl p-2 sm:p-3 lg:p-6 flex flex-col overflow-y-auto">
           
           {/* Game Controls */}
-          <div className="mb-6">
-            <h3 className="text-white font-bold mb-4 text-center text-sm uppercase tracking-wide">Controles del Juego</h3>
-            <div className="space-y-3">
+          <div className="mb-3 sm:mb-4 lg:mb-6">
+            <h3 className="text-white font-bold mb-2 sm:mb-3 lg:mb-4 text-center text-xs sm:text-sm uppercase tracking-wide">Controles del Juego</h3>
+            <div className="space-y-2 sm:space-y-3">
               <button
                 onClick={pauseGame}
-                className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-2xl transition-all duration-300 border border-purple-400/50 shadow-2xl hover:shadow-purple-500/25 backdrop-blur-xl"
+                className="w-full flex items-center justify-center space-x-1 sm:space-x-2 px-2 sm:px-3 lg:px-4 py-2 sm:py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-xl lg:rounded-2xl transition-all duration-300 border border-purple-400/50 shadow-2xl hover:shadow-purple-500/25 backdrop-blur-xl"
               >
-                <Pause className="w-4 h-4" />
-                <span className="font-bold text-sm">PAUSAR</span>
+                <Pause className="w-3 h-3 sm:w-4 h-4" />
+                <span className="font-bold text-xs sm:text-sm">PAUSAR</span>
               </button>
               
               <button 
                 onClick={resetGame}
-                className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 rounded-2xl transition-all duration-300 border border-red-400/50 shadow-2xl hover:shadow-red-500/25 backdrop-blur-xl"
+                className="w-full flex items-center justify-center space-x-1 sm:space-x-2 px-2 sm:px-3 lg:px-4 py-2 sm:py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 rounded-xl lg:rounded-2xl transition-all duration-300 border border-red-400/50 shadow-2xl hover:shadow-red-500/25 backdrop-blur-xl"
               >
-                <Home className="w-4 h-4" />
-                <span className="font-bold text-sm">MENÚ</span>
+                <Home className="w-3 h-3 sm:w-4 h-4" />
+                <span className="font-bold text-xs sm:text-sm">MENÚ</span>
               </button>
             </div>
           </div>
 
           {/* Alien Types Legend */}
-          <div className="mb-6">
-            <h3 className="text-white font-bold mb-4 text-center text-sm uppercase tracking-wide">Tipos de Aliens</h3>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-3 p-2 bg-slate-800/30 rounded-xl">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm flex-1">Scout</span>
-                <span className="text-gray-400 text-sm">1 HP</span>
+          <div className="mb-3 sm:mb-4 lg:mb-6">
+            <h3 className="text-white font-bold mb-2 sm:mb-3 lg:mb-4 text-center text-xs sm:text-sm uppercase tracking-wide">Tipos de Aliens</h3>
+            <div className="space-y-1 sm:space-y-2">
+              <div className="flex items-center space-x-2 sm:space-x-3 p-1 sm:p-2 bg-slate-800/30 rounded-lg sm:rounded-xl">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full"></div>
+                <span className="text-gray-300 text-xs sm:text-sm flex-1">Scout</span>
+                <span className="text-gray-400 text-xs sm:text-sm">1 HP</span>
               </div>
-              <div className="flex items-center space-x-3 p-2 bg-slate-800/30 rounded-xl">
-                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm flex-1">Warrior</span>
-                <span className="text-gray-400 text-sm">1 HP</span>
+              <div className="flex items-center space-x-2 sm:space-x-3 p-1 sm:p-2 bg-slate-800/30 rounded-lg sm:rounded-xl">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-purple-500 rounded-full"></div>
+                <span className="text-gray-300 text-xs sm:text-sm flex-1">Warrior</span>
+                <span className="text-gray-400 text-xs sm:text-sm">1 HP</span>
               </div>
-              <div className="flex items-center space-x-3 p-2 bg-slate-800/30 rounded-xl">
-                <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm flex-1">Hunter</span>
-                <span className="text-gray-400 text-sm">1 HP</span>
+              <div className="flex items-center space-x-2 sm:space-x-3 p-1 sm:p-2 bg-slate-800/30 rounded-lg sm:rounded-xl">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-orange-500 rounded-full"></div>
+                <span className="text-gray-300 text-xs sm:text-sm flex-1">Hunter</span>
+                <span className="text-gray-400 text-xs sm:text-sm">1 HP</span>
               </div>
-              <div className="flex items-center space-x-3 p-2 bg-slate-800/30 rounded-xl">
-                <div className="w-3 h-3 bg-cyan-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm flex-1">Guardian</span>
-                <span className="text-gray-400 text-sm">2 HP</span>
+              <div className="flex items-center space-x-2 sm:space-x-3 p-1 sm:p-2 bg-slate-800/30 rounded-lg sm:rounded-xl">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-cyan-500 rounded-full"></div>
+                <span className="text-gray-300 text-xs sm:text-sm flex-1">Guardian</span>
+                <span className="text-gray-400 text-xs sm:text-sm">2 HP</span>
               </div>
-              <div className="flex items-center space-x-3 p-2 bg-slate-800/30 rounded-xl">
-                <div className="w-3 h-3 bg-pink-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm flex-1">Commander</span>
-                <span className="text-gray-400 text-sm">3 HP</span>
+              <div className="flex items-center space-x-2 sm:space-x-3 p-1 sm:p-2 bg-slate-800/30 rounded-lg sm:rounded-xl">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-pink-500 rounded-full"></div>
+                <span className="text-gray-300 text-xs sm:text-sm flex-1">Commander</span>
+                <span className="text-gray-400 text-xs sm:text-sm">3 HP</span>
               </div>
             </div>
           </div>
 
           {/* Power-ups Legend */}
           <div className="mt-auto">
-            <h3 className="text-white font-bold mb-4 text-center text-sm uppercase tracking-wide">Power-ups</h3>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-3 p-2 bg-slate-800/30 rounded-xl">
-                <div className="w-3 h-3 bg-yellow-400 rounded-full shadow-lg shadow-yellow-400/50"></div>
-                <span className="text-gray-300 text-sm">Evolución de Arma</span>
+            <h3 className="text-white font-bold mb-2 sm:mb-3 lg:mb-4 text-center text-xs sm:text-sm uppercase tracking-wide">Power-ups</h3>
+            <div className="space-y-1 sm:space-y-2">
+              <div className="flex items-center space-x-2 sm:space-x-3 p-1 sm:p-2 bg-slate-800/30 rounded-lg sm:rounded-xl">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-400 rounded-full shadow-lg shadow-yellow-400/50"></div>
+                <span className="text-gray-300 text-xs sm:text-sm">Evolución de Arma</span>
               </div>
-              <div className="flex items-center space-x-3 p-2 bg-slate-800/30 rounded-xl">
-                <div className="w-3 h-3 bg-green-400 rounded-full shadow-lg shadow-green-400/50"></div>
-                <span className="text-gray-300 text-sm">Restaurar Vida (+25)</span>
+              <div className="flex items-center space-x-2 sm:space-x-3 p-1 sm:p-2 bg-slate-800/30 rounded-lg sm:rounded-xl">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full shadow-lg shadow-green-400/50"></div>
+                <span className="text-gray-300 text-xs sm:text-sm">Restaurar Vida (+25)</span>
               </div>
-              <div className="flex items-center space-x-3 p-2 bg-slate-800/30 rounded-xl">
-                <div className="w-3 h-3 bg-blue-400 rounded-full shadow-lg shadow-blue-400/50"></div>
-                <span className="text-gray-300 text-sm">Restaurar Escudo (+30)</span>
+              <div className="flex items-center space-x-2 sm:space-x-3 p-1 sm:p-2 bg-slate-800/30 rounded-lg sm:rounded-xl">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-400 rounded-full shadow-lg shadow-blue-400/50"></div>
+                <span className="text-gray-300 text-xs sm:text-sm">Restaurar Escudo (+30)</span>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Controls - Solo en móviles */}
+      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 lg:hidden pointer-events-auto">
+        <div className="bg-slate-900/95 backdrop-blur-xl rounded-xl border border-cyan-400/30 shadow-2xl p-2">
+          <div className="text-center text-white text-xs font-bold mb-2">CONTROLES</div>
+          <div className="flex space-x-4 text-xs text-gray-300">
+            <div className="text-center">
+              <div className="px-2 py-1 bg-slate-700/60 rounded text-xs font-bold border border-cyan-400/30 mb-1">WASD</div>
+              <div>Mover</div>
+            </div>
+            <div className="text-center">
+              <div className="px-2 py-1 bg-slate-700/60 rounded text-xs font-bold border border-cyan-400/30 mb-1">SPACE</div>
+              <div>Disparar</div>
+            </div>
+            <div className="text-center">
+              <div className="px-2 py-1 bg-slate-700/60 rounded text-xs font-bold border border-cyan-400/30 mb-1">P</div>
+              <div>Pausa</div>
             </div>
           </div>
         </div>
